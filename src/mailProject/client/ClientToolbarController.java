@@ -26,6 +26,7 @@ public class ClientToolbarController {
         FXMLLoader formLoader = new FXMLLoader(getClass().getResource("clientFXML/clientFormView.fxml"));
         formPane = formLoader.load();
         formController = formLoader.getController();
+        formController.initClientModel(model);
         formScene = new Scene(formPane);
     }
 

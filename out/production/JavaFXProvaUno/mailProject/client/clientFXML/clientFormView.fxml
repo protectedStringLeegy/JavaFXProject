@@ -1,28 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<GridPane fx:id="mainPane" fx:controller="mailProject.client.ClientFormController" hgap="5.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" minWidth="400.0" prefHeight="400.0" prefWidth="600.0" vgap="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane fx:id="mainPane" hgap="5.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" minWidth="400.0" prefHeight="400.0" prefWidth="600.0" vgap="5.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mailProject.client.ClientFormController">
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="SOMETIMES" />
     <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints vgrow="NEVER" />
     <RowConstraints vgrow="NEVER" />
-    <RowConstraints vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+    <RowConstraints vgrow="ALWAYS" />
+      <RowConstraints vgrow="NEVER" />
   </rowConstraints>
    <children>
       <TextField fx:id="receiverField" promptText="Receiver" />
       <TextField fx:id="subjectField" promptText="Subject" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
-      <TextArea fx:id="textField" prefHeight="200.0" prefWidth="200.0" promptText="Text" wrapText="true" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
-      <Button onAction="#addReceiver" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Cc" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
-      <Button onAction="#sendEmail" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Send" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+      <TextArea fx:id="textField" promptText="Text" wrapText="true" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
+      <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addReceiver" text="Cc" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+      <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#sendEmail" text="Send" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+      <Label fx:id="errorLabel" style="-fx-text-fill: darkred;" underline="true" GridPane.rowIndex="3">
+         <font>
+            <Font size="15.0" />
+         </font>
+         <GridPane.margin>
+            <Insets left="5.0" />
+         </GridPane.margin>
+      </Label>
    </children>
    <padding>
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
