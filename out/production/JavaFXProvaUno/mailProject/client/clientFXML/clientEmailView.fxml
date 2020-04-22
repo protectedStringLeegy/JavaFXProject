@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane hgap="10.0" minWidth="500.0" vgap="2.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mailProject.client.ClientEmailController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" />
+    <ColumnConstraints hgrow="SOMETIMES" />
+      <ColumnConstraints hgrow="SOMETIMES" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Label text="Sender:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="senderLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="LEFT">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label text="Subject:" GridPane.rowIndex="1">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="textLabel" text="Label" wrapText="true" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.valignment="TOP">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="dateLabel" text="Label" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="subjectLabel" text="Label" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</GridPane>

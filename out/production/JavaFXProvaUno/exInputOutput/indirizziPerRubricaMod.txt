@@ -1,0 +1,4 @@
+Bianchi; Mario; Po; 7; Torino
+Verdi; Maria; Roma; 76; Torino
+Neri; Guido Maria; Bellezia; 23; Torino
+Bruschi; Christian; Cazzi; 5; Cuorgnè
