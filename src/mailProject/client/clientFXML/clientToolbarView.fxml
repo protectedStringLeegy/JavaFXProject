@@ -7,7 +7,7 @@
     <Button mnemonicParsing="false" text="Reply" />
       <Button mnemonicParsing="false" text="Reply All" />
       <Button mnemonicParsing="false" text="Forward" />
-      <Button mnemonicParsing="false" text="Delete" />
+      <Button onAction="#deleteMail" mnemonicParsing="false" text="Delete" />
       <Button onAction="#newMail" mnemonicParsing="false" text="New mail" />
       <ToggleButton mnemonicParsing="false" text="Darkmode" />
   </items>

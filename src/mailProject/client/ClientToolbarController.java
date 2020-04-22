@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import mailProject.model.ClientModel;
+import mailProject.model.Email;
 
 import java.io.IOException;
 
@@ -36,5 +37,11 @@ public class ClientToolbarController {
         formWindow.setTitle("New E-Mail");
         formWindow.setScene(formScene);
         formWindow.show();
+    }
+
+    @FXML
+    public void deleteMail() {
+        model.getEmailList().remove(model.getCurrentEmail());
+        model.setCurrentEmail(new Email("","","",0));
     }
 }

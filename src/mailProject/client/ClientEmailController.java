@@ -33,10 +33,18 @@ public class ClientEmailController {
         this.model = model;
 
         model.currentEmailProperty().addListener((observable, oldValue, newValue) -> {
-            senderLabel.setText(newValue.getSender());
-            dateLabel.setText(timeFormat.format(newValue.getDate().getTime()));
-            subjectLabel.setText(newValue.getSubject());
-            textLabel.setText(newValue.getText());
-            });
+            if (newValue == null) {
+                senderLabel.setText("");
+                dateLabel.setText("");
+                subjectLabel.setText("");
+                textLabel.setText("");
+            } else {
+                senderLabel.setText(newValue.getSender());
+                dateLabel.setText(timeFormat.format(newValue.getDate().getTime()));
+                subjectLabel.setText(newValue.getSubject());
+                textLabel.setText(newValue.getText());
+            }
+
+        });
     }
 }
