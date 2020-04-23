@@ -6,27 +6,40 @@ import javafx.collections.ObservableList;
 
 public class ClientModel {
 
+    // EMAIL List PROPERTY //
+
     private final ObservableList<Email> emailList = FXCollections.observableArrayList();
+    public ObservableList<Email> getEmailList() {
+        return emailList ;
+    }
+
+    // CURRENT EMAIL PROPERTY //
 
     private final ObjectProperty<Email> currentEmail = new SimpleObjectProperty<>(null);
-
-    private final SimpleBooleanProperty isEmailSelected = new SimpleBooleanProperty(false);
-
     public ObjectProperty<Email> currentEmailProperty() {
         return currentEmail ;
     }
-
     public final Email getCurrentEmail() {
         return currentEmailProperty().get();
     }
-
     public final void setCurrentEmail(Email email) {
         currentEmailProperty().set(email);
     }
 
-    public ObservableList<Email> getEmailList() {
-        return emailList ;
+    // IS EMAIL SELECTED PROPERTY //
+
+    private final SimpleBooleanProperty isEmailSelected = new SimpleBooleanProperty(false);
+    public SimpleBooleanProperty emailSelectedBooleanProperty() {
+        return isEmailSelected;
     }
+    public final boolean getIsEmailSelected() {
+        return emailSelectedBooleanProperty().get();
+    }
+    public final void setIsEmailSelected(boolean bool) {
+        emailSelectedBooleanProperty().set(bool);
+    }
+
+
 
     public void loadData() {
         emailList.add(0, new Email("picciotto666@gmail.com", "oguaglioneinnero@outlook.com",

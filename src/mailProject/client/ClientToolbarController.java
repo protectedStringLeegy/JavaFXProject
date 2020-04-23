@@ -1,5 +1,6 @@
 package mailProject.client;
 
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,7 +16,16 @@ import java.io.IOException;
 public class ClientToolbarController {
 
     @FXML
-    private ToolBar toolBar;
+    private Button replyButton;
+
+    @FXML
+    private Button replyAllButton;
+
+    @FXML
+    private Button forwardButton;
+
+    @FXML
+    private Button deleteButton;
 
     private ClientModel model;
     private GridPane formPane;
@@ -28,6 +38,20 @@ public class ClientToolbarController {
             throw new IllegalStateException("Model can only be initialized once");
         }
         this.model = model;
+
+        model.emailSelectedBooleanProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                replyButton.setDisable(true);
+                replyAllButton.setDisable(true);
+                deleteButton.setDisable(true);
+                forwardButton.setDisable(true);
+            } else {
+                replyButton.setDisable(false);
+                replyAllButton.setDisable(false);
+                deleteButton.setDisable(false);
+                forwardButton.setDisable(false);
+            }
+        });
 
         FXMLLoader formLoader = new FXMLLoader(getClass().getResource("clientFXML/clientFormView.fxml"));
         formPane = formLoader.load();
@@ -48,9 +72,6 @@ public class ClientToolbarController {
     public void deleteMail() {
         model.getEmailList().remove(model.getCurrentEmail());
         model.setCurrentEmail(null);
-
-        for (int i = 0; i < 4; i++) {
-            ((Button)toolBar.getItems().get(i)).setDisable(true);
-        }
+        model.setIsEmailSelected(false);
     }
 }
