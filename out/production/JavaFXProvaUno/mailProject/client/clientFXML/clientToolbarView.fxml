@@ -4,7 +4,7 @@
 
 <ToolBar fx:controller="mailProject.client.ClientToolbarController" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
   <items>
-    <Button fx:id="replyButton" mnemonicParsing="false" text="Reply" />
+    <Button  fx:id="replyButton" onAction="#replyTo" mnemonicParsing="false" text="Reply" />
       <Button fx:id="replyAllButton" mnemonicParsing="false" text="Reply All" />
       <Button fx:id="forwardButton" mnemonicParsing="false" text="Forward" />
       <Button fx:id="deleteButton" onAction="#deleteMail" mnemonicParsing="false" text="Delete" />

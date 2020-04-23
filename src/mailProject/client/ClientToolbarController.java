@@ -29,7 +29,9 @@ public class ClientToolbarController {
 
     private ClientModel model;
     private GridPane formPane;
+    private GridPane replyPane;
     private ClientFormController formController;
+    private ClientReplyController replyController;
     private Stage formWindow;
     private Scene formScene;
 
@@ -58,12 +60,30 @@ public class ClientToolbarController {
         formController = formLoader.getController();
         formController.initClientModel(model);
         formScene = new Scene(formPane);
+
+
+        FXMLLoader formLoaderReply = new FXMLLoader(getClass().getResource("clientFXML/replyFormView.fxml"));
+        replyPane = formLoaderReply.load();
+        replyController = formLoaderReply.getController();
+        replyController.initClientModel(model);
+        formScene = new Scene(replyPane);
+
+
     }
+
 
     @FXML
     public void newMail() {
         formWindow = new Stage();
         formWindow.setTitle("New E-Mail");
+        formWindow.setScene(formScene);
+        formWindow.show();
+    }
+
+    @FXML
+    public void replyTo(){
+        formWindow = new Stage();
+        formWindow.setTitle("Reply-to");
         formWindow.setScene(formScene);
         formWindow.show();
     }
