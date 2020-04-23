@@ -24,6 +24,7 @@ public class ClientListController {
 
         mailList.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Email> obs, Email oldSelection, Email newSelection) -> {
             model.setCurrentEmail(newSelection);
+            model.setIsEmailSelected(true);
         });
 
         model.currentEmailProperty().addListener((obs, oldPerson, newEmail) -> {
@@ -33,7 +34,5 @@ public class ClientListController {
                 mailList.getSelectionModel().select(newEmail);
             }
         });
-
-        model.setCurrentEmail(model.getEmailList().get(0));
     }
 }
