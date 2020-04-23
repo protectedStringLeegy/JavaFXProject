@@ -17,14 +17,13 @@ public class ClientListController {
             throw new IllegalStateException("Model can only be initialized once");
         }
 
-        this.model = model ;
+        this.model = model;
         model.loadData();
         mailList.setItems(model.getEmailList());
         mailList.setCellFactory(param -> new ClientListCell());
 
         mailList.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Email> obs, Email oldSelection, Email newSelection) -> {
             model.setCurrentEmail(newSelection);
-            System.out.println(newSelection);
         });
 
         model.currentEmailProperty().addListener((obs, oldPerson, newEmail) -> {

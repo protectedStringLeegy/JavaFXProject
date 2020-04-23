@@ -1,7 +1,6 @@
 package mailProject.model;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -10,6 +9,8 @@ public class ClientModel {
     private final ObservableList<Email> emailList = FXCollections.observableArrayList();
 
     private final ObjectProperty<Email> currentEmail = new SimpleObjectProperty<>(null);
+
+    private final SimpleBooleanProperty isEmailSelected = new SimpleBooleanProperty(false);
 
     public ObjectProperty<Email> currentEmailProperty() {
         return currentEmail ;
@@ -28,6 +29,9 @@ public class ClientModel {
     }
 
     public void loadData() {
+        emailList.add(0, new Email("picciotto666@gmail.com", "oguaglioneinnero@outlook.com",
+                "Minaccia", "Vedi di vendere tutti quei decodere velocemente, il tuo fratellino sta bene. " +
+                "E' qui con me.\nDomani ti mando il suo dito indice.", 70));
         emailList.add(0, new Email("epinefridio@gmail.com", "grandecazzo11@gmail.com",
                         "My Dick", "Ascolta se vuoi vedere il mio cazzo ok.", 11));
         emailList.add(0, new Email("brunodinotte@libero.it", "epinefridio@gmail.com",

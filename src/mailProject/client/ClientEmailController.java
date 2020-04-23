@@ -1,6 +1,5 @@
 package mailProject.client;
 
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import mailProject.model.ClientModel;

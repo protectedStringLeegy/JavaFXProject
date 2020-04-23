@@ -3,6 +3,8 @@ package mailProject.client;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ToolBar;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import mailProject.model.ClientModel;
@@ -11,6 +13,9 @@ import mailProject.model.Email;
 import java.io.IOException;
 
 public class ClientToolbarController {
+
+    @FXML
+    private ToolBar toolBar;
 
     private ClientModel model;
     private GridPane formPane;
@@ -42,6 +47,10 @@ public class ClientToolbarController {
     @FXML
     public void deleteMail() {
         model.getEmailList().remove(model.getCurrentEmail());
-        model.setCurrentEmail(new Email("","","",0));
+        model.setCurrentEmail(null);
+
+        for (int i = 0; i < 4; i++) {
+            ((Button)toolBar.getItems().get(i)).setDisable(true);
+        }
     }
 }

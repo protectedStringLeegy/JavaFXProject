@@ -2,13 +2,12 @@
 
 <?import javafx.scene.control.*?>
 
-<ToolBar fx:controller="mailProject.client.ClientToolbarController" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+<ToolBar fx:id="toolBar" fx:controller="mailProject.client.ClientToolbarController" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
   <items>
     <Button mnemonicParsing="false" text="Reply" />
       <Button mnemonicParsing="false" text="Reply All" />
       <Button mnemonicParsing="false" text="Forward" />
       <Button onAction="#deleteMail" mnemonicParsing="false" text="Delete" />
       <Button onAction="#newMail" mnemonicParsing="false" text="New mail" />
-      <ToggleButton mnemonicParsing="false" text="Darkmode" />
   </items>
 </ToolBar>
