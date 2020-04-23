@@ -7,7 +7,7 @@
 
 <GridPane hgap="10.0" minWidth="500.0" vgap="2.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mailProject.client.ClientEmailController">
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" />
+    <ColumnConstraints hgrow="SOMETIMES" percentWidth="15.0" />
     <ColumnConstraints hgrow="SOMETIMES" />
       <ColumnConstraints hgrow="SOMETIMES" />
   </columnConstraints>
@@ -17,32 +17,44 @@
     <RowConstraints maxHeight="1.7976931348623157E308" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label text="Sender:">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="senderLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="LEFT">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label text="Subject:" GridPane.rowIndex="1">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="textLabel" text="Label" wrapText="true" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.valignment="TOP">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
+      <AnchorPane style="-fx-background-color: gainsboro;" GridPane.columnSpan="3">
+         <children>
+            <Label text="Sender:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="senderLabel" layoutX="81.0" text="Label">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane style="-fx-background-color: azure;" GridPane.columnSpan="3" GridPane.rowIndex="1">
+         <children>
+            <Label text="Subject:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="subjectLabel" layoutX="81.0" text="Label">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane style="-fx-background-color: gainsboro;" GridPane.columnSpan="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="TOP">
+         <children>
+            <Label fx:id="textLabel" text="Label" wrapText="true">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
       <Label fx:id="dateLabel" text="Label" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="subjectLabel" text="Label" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
          <font>
             <Font size="14.0" />
          </font>
