@@ -48,6 +48,18 @@ public class ClientModel {
         return clientUsername;
     }
 
+    // EMAIL UNIQUE ID //
+
+    private long uniqueId;
+    public long getUniqueId() {
+        return uniqueId++;
+    }
+    public void setUniqueId(long uniqueId) {
+        this.uniqueId = uniqueId;
+    }
+
+    // CONSTRUCTOR //
+
     public ClientModel(String username) {
         clientUsername = username;
         loadData();
@@ -70,5 +82,7 @@ public class ClientModel {
                 "Some cod skills", "Bello! Guarda che cazzo ho combinato in 2v2 su Cod", 43));
         emailList.add(0, new Email("oguaglioneinnero@outlook.com", "epinefridio@gmail.com",
                 "Decoder illegale", "Bro, ho scoperto come pagare pochissimo e avere tutti gli abbonamenti.", 19));
+
+        setUniqueId(100);
     }
 }

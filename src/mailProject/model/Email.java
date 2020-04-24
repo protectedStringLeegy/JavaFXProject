@@ -5,14 +5,14 @@ import java.util.Calendar;
 
 public class Email {
 
-    private int id;
+    private long id;
     private String sender;
     private ArrayList<String> receivers = new ArrayList<>();
     private String subject;
     private String text;
     private Calendar date;
 
-    public Email(String sender, String receiver, String subject, String text, int id) {
+    public Email(String sender, String receiver, String subject, String text, long id) {
 
         this.sender = sender;
         this.receivers.add(receiver);
@@ -22,7 +22,7 @@ public class Email {
         this.id = id;
     }
 
-    public Email(String sender, ArrayList<String> receivers, String subject, String text, int id) {
+    public Email(String sender, ArrayList<String> receivers, String subject, String text, long id) {
 
         this.sender = sender;
         this.receivers = receivers;
@@ -42,7 +42,7 @@ public class Email {
         this.id = id;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

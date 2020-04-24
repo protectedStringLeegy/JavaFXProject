@@ -9,12 +9,17 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import mailProject.model.ClientModel;
+import mailProject.model.Email;
+
+import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 public class ClientFormController {
 
     private ClientModel model;
-    private int receiverCounter = 0;
-    private FadeTransition fadeOut = new FadeTransition(Duration.millis(5000));
+    private final FadeTransition fadeOut = new FadeTransition(Duration.millis(5000));
+    public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
+            Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     @FXML
     private TextField receiverField;
@@ -65,6 +70,25 @@ public class ClientFormController {
 
     @FXML
     public void sendEmail() {
+        ArrayList<String> emailReceivers = new ArrayList<>();
+        boolean flagValidEmail = true;
+        String[] auxReceiver = receiverField.getText().split(", ");
+        String emailSubject = subjectField.getText();
+        String emailText = textField.getText();
 
+        for (String s : auxReceiver) {
+            if (s.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$")) {
+                emailReceivers.add(s);
+            } else {
+                errorLabel.setText("Insert a valid receiver adress.");
+                errorLabel.setTextFill(Color.DARKRED);
+                flagValidEmail = false;
+            }
+        }
+
+        if (flagValidEmail) {
+            model.getEmailList().add(new Email(model.getClientUsername(), emailReceivers,
+                    emailSubject, emailText, model.getUniqueId()));
+        }
     }
 }

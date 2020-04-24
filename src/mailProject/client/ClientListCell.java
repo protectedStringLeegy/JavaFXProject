@@ -65,7 +65,7 @@ public class ClientListCell extends ListCell<Email> {
 
     public void setInfo(Email email) {
         if (email != null) {
-            itemGridPane.setId(Integer.toString(email.getId()));
+            itemGridPane.setId(Long.toString(email.getId()));
             senderLabel.setText(email.getSender());
             dateLabel.setText(getDateFormat(email.getDate()));
             subjectLabel.setText(email.getSubject());
