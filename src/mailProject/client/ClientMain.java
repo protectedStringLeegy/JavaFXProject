@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -32,12 +31,12 @@ public class ClientMain extends Application {
         ClientEmailController emailController = emailViewLoader.getController();
         mainPane.setCenter(emailView);
 
-        ClientModel model = new ClientModel();
+        ClientModel model = new ClientModel("epinefridio@gmail.com");
         emailController.initClientModel(model);
         listController.initClientModel(model);
         toolbarController.initClientModel(model);
 
-        primaryStage.setTitle("userHere");
+        primaryStage.setTitle(model.getClientUsername());
         primaryStage.setScene(new Scene(mainPane));
         primaryStage.show();
     }

@@ -29,7 +29,6 @@ public class ClientListCell extends ListCell<Email> {
     private GridPane itemGridPane;
 
     private FXMLLoader fxmlLoader;
-    private String auxStringPreview;
     private final SimpleDateFormat hoursFormat = new SimpleDateFormat("HH:mm");
     private final SimpleDateFormat dayFormat = new SimpleDateFormat("dd:M");
 
@@ -71,7 +70,7 @@ public class ClientListCell extends ListCell<Email> {
             dateLabel.setText(getDateFormat(email.getDate()));
             subjectLabel.setText(email.getSubject());
 
-            auxStringPreview = email.getText();
+            String auxStringPreview = email.getText();
             if (auxStringPreview.length() == 0)
                 previewLabel.setText("<No text>");
             else if (auxStringPreview.length() > 34)

@@ -18,7 +18,6 @@ public class ClientListController {
         }
 
         this.model = model;
-        model.loadData();
         mailList.setItems(model.getEmailList());
         mailList.setCellFactory(param -> new ClientListCell());
 
