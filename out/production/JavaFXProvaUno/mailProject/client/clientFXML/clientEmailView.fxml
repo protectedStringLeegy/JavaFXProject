@@ -24,7 +24,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label fx:id="senderLabel" layoutX="81.0" text="Label">
+            <Label fx:id="senderLabel" layoutX="81.0">
                <font>
                   <Font size="14.0" />
                </font>
@@ -38,7 +38,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label fx:id="subjectLabel" layoutX="81.0" text="Label">
+            <Label fx:id="subjectLabel" layoutX="81.0">
                <font>
                   <Font size="14.0" />
                </font>
@@ -47,14 +47,14 @@
       </AnchorPane>
       <AnchorPane style="-fx-background-color: gainsboro;" GridPane.columnSpan="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="TOP">
          <children>
-            <Label fx:id="textLabel" text="Label" wrapText="true">
+            <Label fx:id="textLabel" wrapText="true" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
          </children>
       </AnchorPane>
-      <Label fx:id="dateLabel" text="Label" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
+      <Label fx:id="dateLabel" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
          <font>
             <Font size="14.0" />
          </font>

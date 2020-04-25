@@ -2,11 +2,13 @@ package mailProject.client;
 
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import mailProject.model.ClientModel;
 import mailProject.model.Email;
@@ -35,6 +37,11 @@ public class ClientFormController {
 
     @FXML
     private GridPane mainPane;
+
+    @FXML
+    private Button closeButton;
+
+
 
     public void initClientModel(ClientModel model) {
         if (this.model != null) {
@@ -80,7 +87,7 @@ public class ClientFormController {
             if (s.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$")) {
                 emailReceivers.add(s);
             } else {
-                errorLabel.setText("Insert a valid receiver adress.");
+                errorLabel.setText("Insert a valid receiver address.");
                 errorLabel.setTextFill(Color.DARKRED);
                 flagValidEmail = false;
             }
@@ -90,5 +97,18 @@ public class ClientFormController {
             model.getEmailList().add(new Email(model.getClientUsername(), emailReceivers,
                     emailSubject, emailText, model.getUniqueId()));
         }
+
+    }
+
+    @FXML
+    private void closeButtonAction(){
+        long mTime = System.currentTimeMillis();
+        long end = mTime + 2000;
+        Stage stage = (Stage) closeButton.getScene().getWindow();
+        while (mTime < end)
+        {
+            mTime = System.currentTimeMillis();
+        }
+        stage.close();
     }
 }

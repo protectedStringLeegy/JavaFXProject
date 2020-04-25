@@ -68,6 +68,7 @@ public class ClientToolbarController {
         formWindow.show();
     }
 
+
     @FXML
     public void replyTo() {
         formWindow = new Stage();
@@ -130,4 +131,5 @@ public class ClientToolbarController {
 
         return auxBuilder.toString();
     }
+
 }
