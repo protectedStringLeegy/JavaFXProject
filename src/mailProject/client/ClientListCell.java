@@ -73,8 +73,8 @@ public class ClientListCell extends ListCell<Email> {
             String auxStringPreview = email.getText();
             if (auxStringPreview.length() == 0)
                 previewLabel.setText("<No text>");
-            else if (auxStringPreview.length() > 34)
-                previewLabel.setText(auxStringPreview.substring(0, 35) + "...");
+            else if (auxStringPreview.length() > 29)
+                previewLabel.setText(auxStringPreview.substring(0, 30) + "...");
             else
                 previewLabel.setText(auxStringPreview);
         }

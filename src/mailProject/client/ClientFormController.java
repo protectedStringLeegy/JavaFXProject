@@ -79,7 +79,7 @@ public class ClientFormController {
     public void sendEmail() {
         ArrayList<String> emailReceivers = new ArrayList<>();
         boolean flagValidEmail = true;
-        String[] auxReceiver = receiverField.getText().split(", ");
+        String[] auxReceiver = receiverField.getText().split(", *");
         String emailSubject = subjectField.getText();
         String emailText = textField.getText();
 

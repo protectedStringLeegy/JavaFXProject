@@ -5,12 +5,12 @@ import java.util.Calendar;
 
 public class Email {
 
-    private long id;
-    private String sender;
+    private final long id;
+    private final String sender;
     private ArrayList<String> receivers = new ArrayList<>();
-    private String subject;
-    private String text;
-    private Calendar date;
+    private final String subject;
+    private final String text;
+    private final Calendar date;
 
     public Email(String sender, String receiver, String subject, String text, long id) {
 
