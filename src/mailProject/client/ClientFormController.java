@@ -2,7 +2,6 @@ package mailProject.client;
 
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -14,14 +13,12 @@ import mailProject.model.ClientModel;
 import mailProject.model.Email;
 
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 public class ClientFormController {
 
     private ClientModel model;
     private final FadeTransition fadeOut = new FadeTransition(Duration.millis(5000));
-    public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
-            Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+    private final FadeTransition sendEmailTransition = new FadeTransition(Duration.millis(1000));
 
     @FXML
     private TextField receiverField;
@@ -37,11 +34,6 @@ public class ClientFormController {
 
     @FXML
     private GridPane mainPane;
-
-    @FXML
-    private Button closeButton;
-
-
 
     public void initClientModel(ClientModel model) {
         if (this.model != null) {
@@ -59,6 +51,12 @@ public class ClientFormController {
         fadeOut.setToValue(0.0);
         fadeOut.setCycleCount(1);
         fadeOut.setAutoReverse(false);
+
+        sendEmailTransition.setNode(errorLabel);
+        sendEmailTransition.setFromValue(1.0);
+        sendEmailTransition.setToValue(0.0);
+        sendEmailTransition.setCycleCount(1);
+        sendEmailTransition.setAutoReverse(false);
     }
 
     @FXML
@@ -87,28 +85,33 @@ public class ClientFormController {
             if (s.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$")) {
                 emailReceivers.add(s);
             } else {
-                errorLabel.setText("Insert a valid receiver address.");
-                errorLabel.setTextFill(Color.DARKRED);
                 flagValidEmail = false;
             }
         }
 
-        if (flagValidEmail) {
+        if (flagValidEmail && emailSubject.length() > 0 && emailText.length() > 0) {
             model.getEmailList().add(new Email(model.getClientUsername(), emailReceivers,
                     emailSubject, emailText, model.getUniqueId()));
-        }
+            sendEmailTransition.setDuration(Duration.millis(500));
+            sendEmailTransition.setOnFinished(actionEvent -> {
+                ((Stage)mainPane.getScene().getWindow()).close();
+            });
+            errorLabel.setText("Sending email...");
+            errorLabel.setTextFill(Color.DARKGREEN);
+            sendEmailTransition.playFromStart();
+        } else {
+            if (emailSubject.length() == 0) {
+                errorLabel.setText("Insert a valid email subject.");
+                errorLabel.setTextFill(Color.DARKRED);
+            } else if (emailText.length() == 0) {
+                errorLabel.setText("Insert a valid email subject.");
+                errorLabel.setTextFill(Color.DARKRED);
+            } else {
+                errorLabel.setText("Insert a valid receiver address.");
+                errorLabel.setTextFill(Color.DARKRED);
+            }
 
-    }
-
-    @FXML
-    private void closeButtonAction(){
-        long mTime = System.currentTimeMillis();
-        long end = mTime + 2000;
-        Stage stage = (Stage) closeButton.getScene().getWindow();
-        while (mTime < end)
-        {
-            mTime = System.currentTimeMillis();
+            fadeOut.playFromStart();
         }
-        stage.close();
     }
 }

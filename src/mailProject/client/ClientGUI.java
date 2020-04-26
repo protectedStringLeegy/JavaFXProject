@@ -13,7 +13,7 @@ import mailProject.model.Email;
 
 public class ClientGUI extends Application {
 
-    private String applicationUser;
+    private final String applicationUser;
 
     public ClientGUI(String applicationUser) {
         this.applicationUser = applicationUser;
