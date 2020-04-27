@@ -1,6 +1,8 @@
 package mailProject.client;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
@@ -8,6 +10,7 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import mailProject.model.ClientModel;
 import mailProject.model.Email;
 
@@ -41,7 +44,7 @@ public class ClientGUI extends Application {
         ClientModel model = new ClientModel(applicationUser);
         emailController.initClientModel(model);
         listController.initClientModel(model);
-        toolbarController.initClientModel(model);
+        toolbarController.initClientModel(model, clientStage);
 
         clientStage.setTitle(model.getClientUsername());
         clientStage.setScene(new Scene(mainPane));

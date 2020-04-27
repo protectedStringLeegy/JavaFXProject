@@ -1,5 +1,6 @@
 package mailProject.client;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -7,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import mailProject.model.ClientModel;
 
 import java.io.IOException;
@@ -30,11 +32,16 @@ public class ClientToolbarController {
     private Stage formWindow;
     private Scene formScene;
 
-    public void initClientModel(ClientModel model) throws IOException{
+    public void initClientModel(ClientModel model, Stage mainStage) throws IOException{
         if (this.model != null) {
             throw new IllegalStateException("Model can only be initialized once");
         }
         this.model = model;
+
+        replyButton.setDisable(true);
+        replyAllButton.setDisable(true);
+        deleteButton.setDisable(true);
+        forwardButton.setDisable(true);
 
         model.emailSelectedBooleanProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
@@ -55,7 +62,10 @@ public class ClientToolbarController {
         ClientFormController formController = formLoader.getController();
         formController.initClientModel(model);
         formScene = new Scene(formPane);
-
+        mainStage.setOnCloseRequest(windowEvent -> {
+            if (formWindow != null)
+                formWindow.close();
+        });
     }
 
 

@@ -92,7 +92,6 @@ public class ClientFormController {
         if (flagValidEmail && emailSubject.length() > 0 && emailText.length() > 0) {
             model.getEmailList().add(new Email(model.getClientUsername(), emailReceivers,
                     emailSubject, emailText, model.getUniqueId()));
-            sendEmailTransition.setDuration(Duration.millis(500));
             sendEmailTransition.setOnFinished(actionEvent -> {
                 ((Stage)mainPane.getScene().getWindow()).close();
             });

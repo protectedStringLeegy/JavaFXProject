@@ -1,4 +1,4 @@
 package mailProject.model;
 
-public class Server {
+public class ServerModel {
 }
