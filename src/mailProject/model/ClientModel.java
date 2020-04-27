@@ -65,7 +65,7 @@ public class ClientModel {
         loadData();
     }
 
-
+    // METHODS //
 
     private void loadData() {
         ArrayList<String> auxArrList = new ArrayList<>();

@@ -1,9 +1,10 @@
 package mailProject.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class Email {
+public class Email implements Serializable {
 
     private final long id;
     private final String sender;
@@ -65,6 +66,8 @@ public class Email {
     public Calendar getDate() {
         return date;
     }
+
+
 
     @Override
     public String toString() {
