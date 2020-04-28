@@ -1,12 +1,14 @@
 package mailProject.server;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import mailProject.model.ServerModel;
 
 public class ServerGUI extends Application {
@@ -32,6 +34,7 @@ public class ServerGUI extends Application {
 
         serverStage.setTitle("SERVER");
         serverStage.setScene(new Scene(serverPane));
+        serverStage.setOnCloseRequest(windowEvent -> serverModel.saveMailOnFile());
         serverStage.show();
     }
 }
