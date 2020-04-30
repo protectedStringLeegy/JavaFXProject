@@ -1,4 +1,4 @@
-package mailProject.client;
+package mailProject.client.Classes;
 
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
@@ -90,14 +90,22 @@ public class ClientFormController {
         }
 
         if (flagValidEmail && emailSubject.length() > 0 && emailText.length() > 0) {
-            model.getEmailList().add(new Email(model.getClientUsername(), emailReceivers,
-                    emailSubject, emailText, model.getUniqueId()));
-            sendEmailTransition.setOnFinished(actionEvent -> {
-                ((Stage)mainPane.getScene().getWindow()).close();
-            });
             errorLabel.setText("Sending email...");
             errorLabel.setTextFill(Color.DARKGREEN);
             sendEmailTransition.playFromStart();
+            if (model.sendEmail(new Email(model.getClientUsername(), emailReceivers,
+                    emailSubject, emailText, model.getUniqueId()))) {
+                errorLabel.setText("Email sended.");
+                sendEmailTransition.setOnFinished(actionEvent -> {
+                    ((Stage)mainPane.getScene().getWindow()).close();
+                });
+                sendEmailTransition.playFromStart();
+            } else {
+                errorLabel.setTextFill(Color.DARKRED);
+                errorLabel.setText("Failed to send.");
+                sendEmailTransition.playFromStart();
+            }
+
         } else {
             if (emailSubject.length() == 0) {
                 errorLabel.setText("Insert a valid email subject.");

@@ -1,4 +1,4 @@
-package mailProject.client;
+package mailProject.client.Classes;
 
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;

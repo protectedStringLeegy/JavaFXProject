@@ -1,19 +1,37 @@
 package mailProject.model;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ServerModel {
 
+    // CONNECTION PARAMETERS //
+
+    private ServerSocket serverSocket;
+    private ObjectOutputStream outputStream;
+    private ObjectInputStream inputStream;
+    private boolean runningServer = true;
+    public void stop() {
+        runningServer = false;
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     // I/O Parameters //
 
-    private static final String FILEPATH = "src/mailProject/EmailStorage.txt";
+    private static final String FILEPATH = "src/mailProject/server/storage.dat";
 
     // LOG List PROPERTY //
 
@@ -53,29 +71,9 @@ public class ServerModel {
 
     public ServerModel() {
         logList.add("Server started ...");
-
-        ArrayList<String> auxArrList = new ArrayList<>();
-        auxArrList.add("epinefridio@gmail.com");
-        auxArrList.add("oguaglioneinnero@outlook.com");
-        auxArrList.add("grandecazzo11@gmail.com");
-        auxArrList.add("sonobelloebasta@alice.it");
-
-
-        ArrayList<Email> emailList = new ArrayList<>();
-        emailList.add(0, new Email("picciotto666@gmail.com", "oguaglioneinnero@outlook.com",
-                "Minaccia", "Vedi di vendere tutti quei decodere velocemente, il tuo fratellino sta bene. " +
-                "E' qui con me.\nDomani ti mando il suo dito indice.", 70));
-        emailList.add(0, new Email("epinefridio@gmail.com", "grandecazzo11@gmail.com",
-                "My Dick", "Ascolta se vuoi vedere il mio cazzo ok.", 11));
-        emailList.add(0, new Email("brunodinotte@libero.it", auxArrList,
-                "Some cod skills", "Bello! Guarda che cazzo ho combinato in 2v2 su Cod", 43));
-        emailList.add(0, new Email("oguaglioneinnero@outlook.com", "epinefridio@gmail.com",
-                "Decoder illegale", "Bro, ho scoperto come pagare pochissimo e avere tutti gli abbonamenti.", 19));
-
-        insertMailsOnFile(emailList);
         logList.add("Loading email ...");
         loadMailFromFile();
-        insertUserInView();
+        startServer();
     }
 
     // METHOD //
@@ -125,19 +123,87 @@ public class ServerModel {
         }
     }
 
-    private void insertMailsOnFile(ArrayList<Email> mails) {
+    private void startServer() {
         try {
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILEPATH));
+            serverSocket = new ServerSocket(8189);
+            System.out.println("Server creato.");
 
-            for (Email mail : mails)
-                out.writeObject(mail);
-
-        } catch (IOException e) {
-            e.printStackTrace();
+            new Thread(() -> {
+                while (runningServer) {
+                    Socket incoming = null;
+                    try {
+                        incoming = serverSocket.accept();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Runnable runnable = new ThreadedRequestHandler(incoming, mailMap, this);
+                    new Thread(runnable).start();
+                }
+            }).start();
         }
+        catch (IOException e) {e.printStackTrace();}
+    }
+}
+
+class ThreadedRequestHandler implements Runnable {
+
+    Socket incoming;
+    HashMap<String, ArrayList<Email>> mailMap;
+    ServerModel serverModel;
+
+    public ThreadedRequestHandler (Socket incoming, HashMap<String, ArrayList<Email>> map, ServerModel model) {
+        this.incoming = incoming;
+        this.mailMap = map;
+        serverModel = model;
     }
 
-    private void insertUserInView() {
-        userList.addAll(mailMap.keySet());
+    @Override
+    public void run() {
+        ObjectInputStream inputStream;
+        ObjectOutputStream outputStream = null;
+
+        try {
+            outputStream = new ObjectOutputStream(incoming.getOutputStream());
+            inputStream = new ObjectInputStream(incoming.getInputStream());
+
+
+            String aux = (String)inputStream.readObject();
+            if (aux.equalsIgnoreCase("sessionClosed")) {
+                String disconnectedUser = (String)inputStream.readObject();
+                Platform.runLater(() -> {
+                    serverModel.getLogList().add(disconnectedUser + " si è disconnesso.");
+                    serverModel.getUserList().remove(disconnectedUser);
+                });
+            } else if (aux.equalsIgnoreCase("emailRequest")) {
+                Email auxMail = (Email)inputStream.readObject();
+                Platform.runLater(() -> {
+                    serverModel.getLogList().add("L'utente " + auxMail.getSender() + " ha inviato una mail.");
+                });
+                outputStream.writeObject(true);
+
+            } else {
+                Platform.runLater(() -> {
+                    serverModel.getLogList().add(aux + " si è collegato al server.");
+                    serverModel.getUserList().add(aux);
+                });
+                if (mailMap.containsKey(aux)) {
+                    System.out.println(mailMap.get(aux));
+                    outputStream.writeObject(mailMap.get(aux));
+                } else {
+                    mailMap.put(aux, new ArrayList<>());
+                    outputStream.writeObject(null);
+                }
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                assert outputStream != null;
+                outputStream.flush();
+                incoming.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

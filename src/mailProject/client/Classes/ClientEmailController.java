@@ -1,4 +1,4 @@
-package mailProject.client;
+package mailProject.client.Classes;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

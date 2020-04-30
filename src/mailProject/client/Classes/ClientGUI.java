@@ -1,6 +1,7 @@
-package mailProject.client;
+package mailProject.client.Classes;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
@@ -8,6 +9,7 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import mailProject.model.ClientModel;
 import mailProject.model.Email;
 
@@ -23,17 +25,17 @@ public class ClientGUI extends Application {
     public void start(Stage clientStage) throws Exception {
 
         BorderPane mainPane = new BorderPane();
-        FXMLLoader listLoader = new FXMLLoader(getClass().getResource("clientFXML/clientListView.fxml"));
+        FXMLLoader listLoader = new FXMLLoader(getClass().getClassLoader().getResource("mailProject/client/ClientFXML/clientListView.fxml"));
         ListView<Email> listView = listLoader.load();
         ClientListController listController = listLoader.getController();
         mainPane.setLeft(listView);
 
-        FXMLLoader toolbarLoader = new FXMLLoader(getClass().getResource("clientFXML/clientToolbarView.fxml"));
+        FXMLLoader toolbarLoader = new FXMLLoader(getClass().getClassLoader().getResource("mailProject/client/clientFXML/clientToolbarView.fxml"));
         ToolBar toolBar = toolbarLoader.load();
         ClientToolbarController toolbarController = toolbarLoader.getController();
         mainPane.setTop(toolBar);
 
-        FXMLLoader emailViewLoader = new FXMLLoader(getClass().getResource("clientFXML/clientEmailView.fxml"));
+        FXMLLoader emailViewLoader = new FXMLLoader(getClass().getClassLoader().getResource("mailProject/client/clientFXML/clientEmailView.fxml"));
         GridPane emailView = emailViewLoader.load();
         ClientEmailController emailController = emailViewLoader.getController();
         mainPane.setCenter(emailView);
@@ -46,5 +48,12 @@ public class ClientGUI extends Application {
         clientStage.setTitle(model.getClientUsername());
         clientStage.setScene(new Scene(mainPane));
         clientStage.show();
+
+        clientStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                model.closeUserSession();
+            }
+        });
     }
 }

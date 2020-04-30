@@ -4,9 +4,23 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class ClientModel {
+
+    // CONNECTION PARAMETERS //
+
+    private Socket userSocket;
+    private String nomeHost;
+    private ObjectInputStream inputStream;
+    private ObjectOutputStream outputStream;
 
     // EMAIL List PROPERTY //
 
@@ -61,14 +75,56 @@ public class ClientModel {
     // CONSTRUCTOR //
 
     public ClientModel(String username) {
+        System.out.println("Creazione Model ...");
         clientUsername = username;
-        loadData();
+        try {
+            nomeHost = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        connectToServer();
     }
 
     // METHODS //
 
+    private void connectToServer() {
+        try {
+            userSocket = new Socket(nomeHost, 8189);
+            System.out.println("Connesso al server.");
+
+            outputStream = new ObjectOutputStream(userSocket.getOutputStream());
+            inputStream = new ObjectInputStream(userSocket.getInputStream());
+
+            System.out.println("Carico i dati ...");
+
+            loadData();
+            System.out.println("Dati caricati.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void loadData() {
-        ArrayList<String> auxArrList = new ArrayList<>();
+
+        try {
+            outputStream.writeObject(clientUsername);
+            outputStream.flush();
+
+            new Thread(() -> {
+                try {
+                    ArrayList<Email> aux = (ArrayList<Email>) inputStream.readObject();
+                    if (aux != null)
+                        emailList.addAll(aux);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    System.err.println("ClassNotFoundException");
+                }
+            }).start();
+        } catch (IOException e) {
+            System.out.println("Cazzooooo! Non funziono.");
+        }
+        /*ArrayList<String> auxArrList = new ArrayList<>();
         auxArrList.add("epinefridio@gmail.com");
         auxArrList.add("oguaglioneinnero@outlook.com");
         auxArrList.add("grandecazzo11@gmail.com");
@@ -83,6 +139,39 @@ public class ClientModel {
         emailList.add(0, new Email("oguaglioneinnero@outlook.com", "epinefridio@gmail.com",
                 "Decoder illegale", "Bro, ho scoperto come pagare pochissimo e avere tutti gli abbonamenti.", 19));
 
-        setUniqueId(100);
+        setUniqueId(100);*/
+    }
+
+    public boolean sendEmail(Email email) {
+        try {
+            userSocket = new Socket(nomeHost, 8189);
+
+            outputStream = new ObjectOutputStream(userSocket.getOutputStream());
+            inputStream = new ObjectInputStream(userSocket.getInputStream());
+
+            outputStream.writeObject("emailRequest");
+            outputStream.writeObject(email);
+
+            return (boolean)inputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void closeUserSession() {
+        try {
+            userSocket = new Socket(nomeHost, 8189);
+
+            outputStream = new ObjectOutputStream(userSocket.getOutputStream());
+            inputStream = new ObjectInputStream(userSocket.getInputStream());
+
+            System.out.println("Chiudo la sessione ...");
+
+            outputStream.writeObject("sessionClosed");
+            outputStream.writeObject(clientUsername);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

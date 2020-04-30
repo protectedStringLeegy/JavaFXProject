@@ -1,4 +1,4 @@
-package mailProject.client;
+package mailProject.client.Classes;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -45,7 +45,7 @@ public class ClientListCell extends ListCell<Email> {
         } else {
 
             if (fxmlLoader == null) {
-                fxmlLoader = new FXMLLoader(getClass().getResource("clientFXML/clientListItemView.fxml"));
+                fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("mailProject/client/ClientFXML/clientListItemView.fxml"));
                 fxmlLoader.setController(this);
 
                 try {

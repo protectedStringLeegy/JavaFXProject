@@ -1,15 +1,14 @@
-package mailProject.client;
+package mailProject.client.Main;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import mailProject.client.Classes.ClientGUI;
 
-public class ClientMain extends Application {
+public class ClientMain1 extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
         new ClientGUI("epinefridio@gmail.com").start(new Stage());
-        new ClientGUI("picciotto666@gmail.com").start(new Stage());
-        new ClientGUI("brunodinotte@libero.it").start(new Stage());
     }
 
     public static void main(String[] args) {

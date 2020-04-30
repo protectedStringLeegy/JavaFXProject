@@ -1,6 +1,5 @@
-package mailProject.client;
+package mailProject.client.Classes;
 
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -8,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import mailProject.model.ClientModel;
 
 import java.io.IOException;
@@ -57,7 +55,7 @@ public class ClientToolbarController {
             }
         });
 
-        FXMLLoader formLoader = new FXMLLoader(getClass().getResource("clientFXML/clientFormView.fxml"));
+        FXMLLoader formLoader = new FXMLLoader(getClass().getClassLoader().getResource("mailProject/client/ClientFXML/clientFormView.fxml"));
         formPane = formLoader.load();
         ClientFormController formController = formLoader.getController();
         formController.initClientModel(model);

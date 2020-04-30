@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane hgap="10.0" minWidth="500.0" vgap="2.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mailProject.client.ClientEmailController">
+<GridPane hgap="10.0" minWidth="500.0" vgap="2.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mailProject.client.Classes.ClientEmailController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" percentWidth="15.0" />
     <ColumnConstraints hgrow="SOMETIMES" />

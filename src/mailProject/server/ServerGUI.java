@@ -1,14 +1,13 @@
 package mailProject.server;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import mailProject.model.ServerModel;
 
 public class ServerGUI extends Application {
@@ -21,7 +20,7 @@ public class ServerGUI extends Application {
 
     @Override
     public void start(Stage serverStage) throws Exception {
-
+        System.out.println("Creo il Model ...");
         ServerModel serverModel = new ServerModel();
 
         FXMLLoader listLoader = new FXMLLoader(getClass().getResource("serverMainView.fxml"));
@@ -34,7 +33,10 @@ public class ServerGUI extends Application {
 
         serverStage.setTitle("SERVER");
         serverStage.setScene(new Scene(serverPane));
-        serverStage.setOnCloseRequest(windowEvent -> serverModel.saveMailOnFile());
+        serverStage.setOnCloseRequest(windowEvent -> {
+            serverModel.saveMailOnFile();
+            serverModel.stop();
+        });
         serverStage.show();
     }
 }
