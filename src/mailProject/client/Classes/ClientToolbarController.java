@@ -1,14 +1,30 @@
 package mailProject.client.Classes;
 
+import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
+import javafx.animation.Timeline;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.css.PseudoClass;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import mailProject.model.ClientModel;
+import mailProject.model.Email;
 
+import javax.swing.text.html.ImageView;
+import javax.tools.Tool;
+import java.awt.*;
 import java.io.IOException;
 
 public class ClientToolbarController {
@@ -25,10 +41,14 @@ public class ClientToolbarController {
     @FXML
     private Button deleteButton;
 
+    @FXML
+    private Button connection;
+
     private ClientModel model;
     private GridPane formPane;
     private Stage formWindow;
     private Scene formScene;
+    Tooltip tl = new Tooltip();
 
     public void initClientModel(ClientModel model, Stage mainStage) throws IOException{
         if (this.model != null) {
@@ -40,6 +60,10 @@ public class ClientToolbarController {
         replyAllButton.setDisable(true);
         deleteButton.setDisable(true);
         forwardButton.setDisable(true);
+        model.setIsClientConnected(false);
+        connection.setStyle("-fx-background-color: red");
+        tl.setText("not connected");
+        connection.setTooltip(tl);
 
         model.emailSelectedBooleanProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
@@ -54,6 +78,28 @@ public class ClientToolbarController {
                 forwardButton.setDisable(false);
             }
         });
+        FadeTransition ft = new FadeTransition(Duration.millis(1000), connection);
+        ft.setFromValue(1.0);
+        ft.setToValue(0.2);
+        ft.setCycleCount(Animation.INDEFINITE);
+        ft.setAutoReverse(true);
+        ft.play();
+
+
+
+      model.isClientConnectedProperty().addListener((observable, oldValue, newValue) -> {
+          if(oldValue){
+              connection.setStyle("-fx-background-color: red");
+              tl.setText("not connected");
+              connection.setTooltip(tl);
+          }else {
+              connection.setStyle("-fx-background-color: green");
+              tl.setText("connected");
+              connection.setTooltip(tl);
+          }
+        });
+
+
 
         FXMLLoader formLoader = new FXMLLoader(getClass().getClassLoader().getResource("mailProject/client/ClientFXML/clientFormView.fxml"));
         formPane = formLoader.load();
@@ -118,6 +164,12 @@ public class ClientToolbarController {
         model.getEmailList().remove(model.getCurrentEmail());
         model.setCurrentEmail(null);
         model.setIsEmailSelected(false);
+    }
+
+
+    @FXML
+    public void refreshPressed() {
+        model.refreshClientConnection();
     }
 
     private void clearForm() {

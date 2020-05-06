@@ -1,5 +1,6 @@
 package mailProject.model;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -32,7 +33,6 @@ public class ServerModel {
     }
 
     // USER Session PROPERTY //
-
     private final ObservableList<ServerRequestHandler> userSessions = FXCollections.observableArrayList();
     public ObservableList<ServerRequestHandler> getUserSessions() {
         return userSessions;
@@ -134,7 +134,7 @@ public class ServerModel {
                     try {
                         incoming = serverSocket.accept();
                     } catch (IOException e) {
-                        System.out.println("Server chiuso.");;
+                        System.out.println("Server chiuso.");
                     }
                     if (incoming != null) {
                         Runnable runnable = new ServerRequestHandler(incoming, this);

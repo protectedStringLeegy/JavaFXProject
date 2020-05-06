@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 
-<ToolBar fx:controller="mailProject.client.Classes.ClientToolbarController" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+<ToolBar xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mailProject.client.Classes.ClientToolbarController">
   <items>
-    <Button  fx:id="replyButton" onAction="#replyTo" mnemonicParsing="false" text="Reply" />
-      <Button fx:id="replyAllButton" onAction="#replyAll" mnemonicParsing="false" text="Reply All" />
-      <Button fx:id="forwardButton" onAction="#forwardTo" mnemonicParsing="false" text="Forward" />
-      <Button fx:id="deleteButton" onAction="#deleteMail" mnemonicParsing="false" text="Delete" />
-      <Button onAction="#newMail" mnemonicParsing="false" text="New mail" />
+    <Button fx:id="replyButton" mnemonicParsing="false" onAction="#replyTo" text="Reply" />
+      <Button fx:id="replyAllButton" mnemonicParsing="false" onAction="#replyAll" text="Reply All" />
+      <Button fx:id="forwardButton" mnemonicParsing="false" onAction="#forwardTo" text="Forward" />
+      <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteMail" text="Delete" />
+      <Button mnemonicParsing="false" onAction="#newMail" text="New mail" />
+      <Button fx:id="connection" alignment="CENTER_RIGHT" mnemonicParsing="false" scaleX="0.5" scaleY="0.5" />
+      <Button alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="357.0" layoutY="10.0" mnemonicParsing="false" onAction="#refreshPressed" nodeOrientation="RIGHT_TO_LEFT" >
+         <graphic>
+            <ImageView fitHeight="20.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@refresh.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
   </items>
 </ToolBar>

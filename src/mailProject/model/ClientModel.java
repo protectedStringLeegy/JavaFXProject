@@ -65,6 +65,13 @@ public class ClientModel {
         emailSelectedBooleanProperty().set(bool);
     }
 
+    //CLIENT CONNECTION NOTIFIER //
+
+    private final SimpleBooleanProperty isClientConnected = new SimpleBooleanProperty(false);
+    public SimpleBooleanProperty isClientConnectedProperty(){return isClientConnected; }
+    public final boolean getIsClientConnected(){return isClientConnectedProperty().get();}
+    public final void setIsClientConnected(boolean bool){isClientConnectedProperty().set(bool);}
+
     // USERNAME PROPERTY //
 
     private final String clientUsername;
@@ -96,12 +103,17 @@ public class ClientModel {
         attendEmail();
     }
 
+    public void  refreshClientConnection(){
+        connectToServerAndLoadData();
+    }
+
     // METHODS //
 
     private void connectToServerAndLoadData() {
         try {
             userSocket = new Socket(nomeHost, 8189);
             System.out.println("Connesso al server.");
+            setIsClientConnected(true);
 
             outputStream = new ObjectOutputStream(userSocket.getOutputStream());
             inputStream = new ObjectInputStream(userSocket.getInputStream());
@@ -195,6 +207,7 @@ class ThreadedEmailReceiver implements Runnable {
                 System.out.println("Client chiuso.");
             } catch (ClassNotFoundException | IOException e) {
                 e.printStackTrace();
+                quit();
             }
         }
     }
