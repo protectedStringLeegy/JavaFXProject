@@ -1,19 +1,21 @@
 package mailProject.server;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import mailProject.model.ServerModel;
+import mailProject.model.ServerRequestHandler;
 
 public class ServerGUI extends Application {
 
     @FXML
-    private ListView<String> userView;
+    private ListView<ServerRequestHandler> userView;
 
     @FXML
     private ListView<String> logView;
@@ -29,7 +31,8 @@ public class ServerGUI extends Application {
 
         logView.setItems(serverModel.getLogList());
         logView.setDisable(true);
-        userView.setItems(serverModel.getUserList());
+        userView.setItems(serverModel.getUserSessions());
+        userView.setCellFactory(threadedRequestHandlerListView -> new UserCell());
 
         serverStage.setTitle("SERVER");
         serverStage.setScene(new Scene(serverPane));
@@ -38,5 +41,19 @@ public class ServerGUI extends Application {
             serverModel.stop();
         });
         serverStage.show();
+    }
+
+    static class UserCell extends ListCell<ServerRequestHandler> {
+
+        @Override
+        protected void updateItem(ServerRequestHandler serverRequestHandler, boolean b) {
+            super.updateItem(serverRequestHandler, b);
+
+            if (serverRequestHandler != null) {
+                Label userLabel = new Label();
+                userLabel.setText(serverRequestHandler.getUser());
+                setGraphic(userLabel);
+            }
+        }
     }
 }

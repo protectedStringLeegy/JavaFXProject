@@ -9,9 +9,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class ClientModel {
 
@@ -21,12 +21,22 @@ public class ClientModel {
     private String nomeHost;
     private ObjectInputStream inputStream;
     private ObjectOutputStream outputStream;
+    private ThreadedEmailReceiver threadedEmailReceiver;
 
     // EMAIL List PROPERTY //
 
     private final ObservableList<Email> emailList = FXCollections.observableArrayList();
     public ObservableList<Email> getEmailList() {
         return emailList ;
+    }
+
+    // Input & Output STREAMS //
+
+    public ObjectInputStream getInputStream() {
+        return inputStream;
+    }
+    public ObjectOutputStream getOutputStream() {
+        return outputStream;
     }
 
     // CURRENT EMAIL PROPERTY //
@@ -82,12 +92,13 @@ public class ClientModel {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        connectToServer();
+        connectToServerAndLoadData();
+        attendEmail();
     }
 
     // METHODS //
 
-    private void connectToServer() {
+    private void connectToServerAndLoadData() {
         try {
             userSocket = new Socket(nomeHost, 8189);
             System.out.println("Connesso al server.");
@@ -97,63 +108,36 @@ public class ClientModel {
 
             System.out.println("Carico i dati ...");
 
-            loadData();
-            System.out.println("Dati caricati.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void loadData() {
-
-        try {
             outputStream.writeObject(clientUsername);
             outputStream.flush();
 
             new Thread(() -> {
                 try {
-                    ArrayList<Email> aux = (ArrayList<Email>) inputStream.readObject();
-                    if (aux != null)
+                    ArrayList<Email> aux = (ArrayList<Email>)inputStream.readObject();
+                    if (aux != null) {
                         emailList.addAll(aux);
+                        System.out.println("Dati caricati.");
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {
                     System.err.println("ClassNotFoundException");
                 }
             }).start();
+
         } catch (IOException e) {
-            System.out.println("Cazzooooo! Non funziono.");
+            e.printStackTrace();
         }
-        /*ArrayList<String> auxArrList = new ArrayList<>();
-        auxArrList.add("epinefridio@gmail.com");
-        auxArrList.add("oguaglioneinnero@outlook.com");
-        auxArrList.add("grandecazzo11@gmail.com");
-
-        emailList.add(0, new Email("picciotto666@gmail.com", "oguaglioneinnero@outlook.com",
-                "Minaccia", "Vedi di vendere tutti quei decodere velocemente, il tuo fratellino sta bene. " +
-                "E' qui con me.\nDomani ti mando il suo dito indice.", 70));
-        emailList.add(0, new Email("epinefridio@gmail.com", "grandecazzo11@gmail.com",
-                        "My Dick", "Ascolta se vuoi vedere il mio cazzo ok.", 11));
-        emailList.add(0, new Email("brunodinotte@libero.it", auxArrList,
-                "Some cod skills", "Bello! Guarda che cazzo ho combinato in 2v2 su Cod", 43));
-        emailList.add(0, new Email("oguaglioneinnero@outlook.com", "epinefridio@gmail.com",
-                "Decoder illegale", "Bro, ho scoperto come pagare pochissimo e avere tutti gli abbonamenti.", 19));
-
-        setUniqueId(100);*/
     }
 
     public boolean sendEmail(Email email) {
         try {
-            userSocket = new Socket(nomeHost, 8189);
 
-            outputStream = new ObjectOutputStream(userSocket.getOutputStream());
-            inputStream = new ObjectInputStream(userSocket.getInputStream());
-
-            outputStream.writeObject("emailRequest");
+            outputStream.writeObject("sendRequest");
             outputStream.writeObject(email);
 
-            return (boolean)inputStream.readObject();
-        } catch (IOException | ClassNotFoundException e) {
+            return inputStream.readBoolean();
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
@@ -161,17 +145,57 @@ public class ClientModel {
 
     public void closeUserSession() {
         try {
-            userSocket = new Socket(nomeHost, 8189);
-
-            outputStream = new ObjectOutputStream(userSocket.getOutputStream());
-            inputStream = new ObjectInputStream(userSocket.getInputStream());
-
-            System.out.println("Chiudo la sessione ...");
-
             outputStream.writeObject("sessionClosed");
-            outputStream.writeObject(clientUsername);
+            threadedEmailReceiver.quit();
+            userSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void attendEmail() {
+        threadedEmailReceiver = new ThreadedEmailReceiver(userSocket, this);
+        new Thread(threadedEmailReceiver).start();
+    }
+}
+
+class ThreadedEmailReceiver implements Runnable {
+
+    private ClientModel model;
+    private Socket socket;
+    private ObjectInputStream inputStream;
+    private ObjectOutputStream outputStream;
+    private boolean quit = false;
+
+    public ThreadedEmailReceiver(Socket socket, ClientModel model) {
+        this.model = model;
+        this.socket = socket;
+        inputStream = model.getInputStream();
+        outputStream = model.getOutputStream();
+    }
+
+    public void quit() {
+        quit = true;
+    }
+
+    @Override
+    public void run() {
+
+        while (!quit) {
+            try {
+
+                Email auxEmail = (Email) inputStream.readObject();
+
+                if (auxEmail.getReceiver().contains(model.getClientUsername())) {
+                    model.getEmailList().add(auxEmail);
+                    outputStream.writeObject("emailReceived");
+                }
+
+            } catch (SocketException e) {
+                System.out.println("Client chiuso.");
+            } catch (ClassNotFoundException | IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
