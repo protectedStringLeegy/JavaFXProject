@@ -2,11 +2,6 @@ package mailProject.client.Classes;
 
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
-import javafx.animation.Timeline;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.css.PseudoClass;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -15,16 +10,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import mailProject.model.ClientModel;
-import mailProject.model.Email;
 
-import javax.swing.text.html.ImageView;
-import javax.tools.Tool;
-import java.awt.*;
 import java.io.IOException;
 
 public class ClientToolbarController {
@@ -43,6 +33,9 @@ public class ClientToolbarController {
 
     @FXML
     private Button connection;
+
+    @FXML
+    private Button refreshButton;
 
     private ClientModel model;
     private GridPane formPane;
@@ -78,6 +71,8 @@ public class ClientToolbarController {
                 forwardButton.setDisable(false);
             }
         });
+
+
         FadeTransition ft = new FadeTransition(Duration.millis(1000), connection);
         ft.setFromValue(1.0);
         ft.setToValue(0.2);
@@ -85,19 +80,18 @@ public class ClientToolbarController {
         ft.setAutoReverse(true);
         ft.play();
 
-
-
-      model.isClientConnectedProperty().addListener((observable, oldValue, newValue) -> {
-          if(oldValue){
-              connection.setStyle("-fx-background-color: red");
-              tl.setText("not connected");
-              connection.setTooltip(tl);
-          }else {
+        model.isClientConnectedProperty().addListener((observable, oldValue, newValue) -> {
+          if (newValue){
+              refreshButton.setDisable(true);
               connection.setStyle("-fx-background-color: green");
               tl.setText("connected");
-              connection.setTooltip(tl);
+          } else {
+              refreshButton.setDisable(false);
+              connection.setStyle("-fx-background-color: red");
+              tl.setText("not connected");
           }
-        });
+          connection.setTooltip(tl);
+      });
 
 
 

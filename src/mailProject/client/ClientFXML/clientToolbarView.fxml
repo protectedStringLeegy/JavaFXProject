@@ -11,7 +11,7 @@
       <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteMail" text="Delete" />
       <Button mnemonicParsing="false" onAction="#newMail" text="New mail" />
       <Button fx:id="connection" alignment="CENTER_RIGHT" mnemonicParsing="false" scaleX="0.5" scaleY="0.5" />
-      <Button alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="357.0" layoutY="10.0" mnemonicParsing="false" onAction="#refreshPressed" nodeOrientation="RIGHT_TO_LEFT" >
+      <Button fx:id="refreshButton" alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="357.0" layoutY="10.0" mnemonicParsing="false" onAction="#refreshPressed" nodeOrientation="RIGHT_TO_LEFT" >
          <graphic>
             <ImageView fitHeight="20.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                <image>

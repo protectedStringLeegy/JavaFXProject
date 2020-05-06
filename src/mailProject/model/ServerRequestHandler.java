@@ -51,18 +51,28 @@ public class ServerRequestHandler implements Runnable {
                         serverModel.getUserSessions().remove(this);
                     });
                 } else if (aux.equalsIgnoreCase("sendRequest")) {
+                    boolean validReceiver = false;
                     Email auxMail = (Email) inputStream.readObject();
                     Platform.runLater(() -> {
                         serverModel.getLogList().add("L'utente " + auxMail.getSender() + " ha inviato una mail.");
                     });
-                    outputStream.writeBoolean(true);
-                    outputStream.flush();
 
                     for (ServerRequestHandler trh : serverModel.getUserSessions()) {
                         if (auxMail.getReceiver().contains(trh.user)) {
+                            trh.outputStream.writeObject("newMail");
                             trh.outputStream.writeObject(auxMail);
+                            validReceiver = true;
                             trh.outputStream.flush();
                         }
+                    }
+
+                    if (!validReceiver) {
+                        outputStream.writeObject("emailFailed");
+                        Platform.runLater(() -> {
+                            serverModel.getLogList().add("Il destinatario della Mail non esiste.");
+                        });
+                    } else {
+                        outputStream.writeObject("mailSended");
                     }
 
                 } else {
@@ -73,10 +83,11 @@ public class ServerRequestHandler implements Runnable {
                     });
                     if (serverModel.getMailMap().containsKey(aux)) {
                         System.out.println(serverModel.getMailMap().get(aux));
+                        outputStream.writeObject("mailList");
                         outputStream.writeObject(serverModel.getMailMap().get(aux));
                     } else {
                         serverModel.getMailMap().put(aux, new ArrayList<>());
-                        outputStream.writeObject(null);
+                        outputStream.writeObject("emptyMailList");
                     }
                     outputStream.flush();
                 }
@@ -84,6 +95,7 @@ public class ServerRequestHandler implements Runnable {
                 System.out.println("Server chiuso.");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
+                quit();
             }
         }
     }

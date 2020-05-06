@@ -1,5 +1,6 @@
 package mailProject.model;
 
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,6 +31,25 @@ public class ClientModel {
         return emailList ;
     }
 
+    // Email SENDED Property //
+
+    private boolean mailSended = false;
+    public boolean isMailSended() {
+        return mailSended;
+    }
+    public void setMailSended(boolean mailSended) {
+        this.mailSended = mailSended;
+    }
+
+    // Waiting for Mail BOOL //
+
+    private boolean waitSendingResponse = true;
+    public boolean isWaitSendingResponse() {
+        return waitSendingResponse;
+    }
+    public void setWaitSendingResponse(boolean waitSendingResponse) {
+        this.waitSendingResponse = waitSendingResponse;
+    }
     // Input & Output STREAMS //
 
     public ObjectInputStream getInputStream() {
@@ -65,7 +85,7 @@ public class ClientModel {
         emailSelectedBooleanProperty().set(bool);
     }
 
-    //CLIENT CONNECTION NOTIFIER //
+    // CLIENT CONNECTION NOTIFIER //
 
     private final SimpleBooleanProperty isClientConnected = new SimpleBooleanProperty(false);
     public SimpleBooleanProperty isClientConnectedProperty(){return isClientConnected; }
@@ -113,45 +133,26 @@ public class ClientModel {
         try {
             userSocket = new Socket(nomeHost, 8189);
             System.out.println("Connesso al server.");
-            setIsClientConnected(true);
 
             outputStream = new ObjectOutputStream(userSocket.getOutputStream());
             inputStream = new ObjectInputStream(userSocket.getInputStream());
 
-            System.out.println("Carico i dati ...");
-
             outputStream.writeObject(clientUsername);
             outputStream.flush();
-
-            new Thread(() -> {
-                try {
-                    ArrayList<Email> aux = (ArrayList<Email>)inputStream.readObject();
-                    if (aux != null) {
-                        emailList.addAll(aux);
-                        System.out.println("Dati caricati.");
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    System.err.println("ClassNotFoundException");
-                }
-            }).start();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public boolean sendEmail(Email email) {
+    public void sendEmail(Email email) {
         try {
 
             outputStream.writeObject("sendRequest");
             outputStream.writeObject(email);
 
-            return inputStream.readBoolean();
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
@@ -160,28 +161,27 @@ public class ClientModel {
             outputStream.writeObject("sessionClosed");
             threadedEmailReceiver.quit();
             userSocket.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void attendEmail() {
-        threadedEmailReceiver = new ThreadedEmailReceiver(userSocket, this);
+        threadedEmailReceiver = new ThreadedEmailReceiver(this);
         new Thread(threadedEmailReceiver).start();
     }
 }
 
 class ThreadedEmailReceiver implements Runnable {
 
-    private ClientModel model;
-    private Socket socket;
-    private ObjectInputStream inputStream;
-    private ObjectOutputStream outputStream;
+    private final ClientModel model;
+    private final ObjectInputStream inputStream;
+    private final ObjectOutputStream outputStream;
     private boolean quit = false;
 
-    public ThreadedEmailReceiver(Socket socket, ClientModel model) {
+    public ThreadedEmailReceiver(ClientModel model) {
         this.model = model;
-        this.socket = socket;
         inputStream = model.getInputStream();
         outputStream = model.getOutputStream();
     }
@@ -195,12 +195,28 @@ class ThreadedEmailReceiver implements Runnable {
 
         while (!quit) {
             try {
-
-                Email auxEmail = (Email) inputStream.readObject();
-
-                if (auxEmail.getReceiver().contains(model.getClientUsername())) {
+                String aux = (String) inputStream.readObject();
+                model.setMailSended(false);
+                System.out.println(aux);
+                if (aux.equalsIgnoreCase("mailList")) {
+                    ArrayList<Email> emailArrayList = (ArrayList<Email>) inputStream.readObject();
+                    Platform.runLater(() -> {
+                        model.getEmailList().addAll(emailArrayList);
+                        model.setIsClientConnected(true);
+                    });
+                } else if (aux.equalsIgnoreCase("emptyMailList")) {
+                    Platform.runLater(() -> {
+                        model.setIsClientConnected(true);
+                    });
+                } else if (aux.equalsIgnoreCase("newMail")) {
+                    Email auxEmail = (Email) inputStream.readObject();
                     model.getEmailList().add(auxEmail);
                     outputStream.writeObject("emailReceived");
+                } else if (aux.equalsIgnoreCase("mailSended")) {
+                        model.setMailSended(true);
+                        model.setWaitSendingResponse(false);
+                } else if (aux.equalsIgnoreCase("mailFailed")) {
+                        model.setWaitSendingResponse(false);
                 }
 
             } catch (SocketException e) {

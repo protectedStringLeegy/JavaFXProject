@@ -93,18 +93,19 @@ public class ClientFormController {
             errorLabel.setText("Sending email...");
             errorLabel.setTextFill(Color.DARKGREEN);
             sendEmailTransition.playFromStart();
-            if (model.sendEmail(new Email(model.getClientUsername(), emailReceivers,
-                    emailSubject, emailText, model.getUniqueId()))) {
+            model.sendEmail(new Email(model.getClientUsername(), emailReceivers,
+                    emailSubject, emailText, model.getUniqueId()));
+            while (model.isWaitSendingResponse()) {
+                errorLabel.setText(errorLabel.getText().concat("."));
+            }
+            if (model.isMailSended()) {
                 errorLabel.setText("Email sended.");
-                sendEmailTransition.setOnFinished(actionEvent -> {
-                    ((Stage)mainPane.getScene().getWindow()).close();
-                });
-                sendEmailTransition.playFromStart();
+                sendEmailTransition.setOnFinished(actionEvent -> ((Stage)mainPane.getScene().getWindow()).close());
             } else {
                 errorLabel.setTextFill(Color.DARKRED);
                 errorLabel.setText("Failed to send.");
-                sendEmailTransition.playFromStart();
             }
+            sendEmailTransition.playFromStart();
 
         } else {
             if (emailSubject.length() == 0) {

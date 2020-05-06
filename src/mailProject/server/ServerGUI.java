@@ -49,10 +49,14 @@ public class ServerGUI extends Application {
         protected void updateItem(ServerRequestHandler serverRequestHandler, boolean b) {
             super.updateItem(serverRequestHandler, b);
 
-            if (serverRequestHandler != null) {
-                Label userLabel = new Label();
-                userLabel.setText(serverRequestHandler.getUser());
-                setGraphic(userLabel);
+            if (!b) {
+                if (serverRequestHandler != null) {
+                    Label userLabel = new Label();
+                    userLabel.setText(serverRequestHandler.getUser());
+                    setGraphic(userLabel);
+                }
+            } else {
+                setGraphic(null);
             }
         }
     }
