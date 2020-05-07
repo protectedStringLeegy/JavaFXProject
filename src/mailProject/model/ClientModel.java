@@ -191,7 +191,8 @@ class ThreadedEmailReceiver implements Runnable {
     private final ObjectInputStream inputStream;
     private final ObjectOutputStream outputStream;
     private boolean quit = false;
-    Alert alert = new Alert(Alert.AlertType.INFORMATION, "New Mail!", ButtonType.OK);
+
+    Alert alert = new Alert(Alert.AlertType.NONE, "New Mail!", ButtonType.OK);
 
     public void setAlert(Alert alert) {
         alert.setTitle(model.getClientUsername());
