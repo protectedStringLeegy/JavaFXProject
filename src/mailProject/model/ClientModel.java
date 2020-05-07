@@ -43,13 +43,14 @@ public class ClientModel {
 
     // Waiting for Mail BOOL //
 
-    private boolean waitSendingResponse = true;
+    private volatile boolean waitSendingResponse = true;
     public boolean isWaitSendingResponse() {
         return waitSendingResponse;
     }
     public void setWaitSendingResponse(boolean waitSendingResponse) {
         this.waitSendingResponse = waitSendingResponse;
     }
+
     // Input & Output STREAMS //
 
     public ObjectInputStream getInputStream() {
@@ -145,14 +146,23 @@ public class ClientModel {
         }
     }
 
-    public void sendEmail(Email email) {
+    public boolean sendEmail(Email email) {
         try {
+            waitSendingResponse = true;
+            System.out.println("Invio la MAIL ...");
 
             outputStream.writeObject("sendRequest");
             outputStream.writeObject(email);
 
-        } catch (IOException e) {
+            while (waitSendingResponse) {
+                System.out.println("Attendo risposta...");
+                Thread.sleep(100);
+            }
+            return isMailSended();
+
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -196,7 +206,6 @@ class ThreadedEmailReceiver implements Runnable {
         while (!quit) {
             try {
                 String aux = (String) inputStream.readObject();
-                model.setMailSended(false);
                 System.out.println(aux);
                 if (aux.equalsIgnoreCase("mailList")) {
                     ArrayList<Email> emailArrayList = (ArrayList<Email>) inputStream.readObject();
@@ -213,10 +222,11 @@ class ThreadedEmailReceiver implements Runnable {
                     model.getEmailList().add(auxEmail);
                     outputStream.writeObject("emailReceived");
                 } else if (aux.equalsIgnoreCase("mailSended")) {
-                        model.setMailSended(true);
-                        model.setWaitSendingResponse(false);
+                    System.out.println("Mail INVIATA!");
+                    setServerResponse(true);
                 } else if (aux.equalsIgnoreCase("mailFailed")) {
-                        model.setWaitSendingResponse(false);
+                    System.out.println("Mail FALLITA!");
+                    setServerResponse(false);
                 }
 
             } catch (SocketException e) {
@@ -226,5 +236,10 @@ class ThreadedEmailReceiver implements Runnable {
                 quit();
             }
         }
+    }
+
+    private void setServerResponse(boolean bool) {
+        model.setMailSended(bool);
+        model.setWaitSendingResponse(false);
     }
 }

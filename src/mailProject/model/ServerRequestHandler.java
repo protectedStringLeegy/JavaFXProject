@@ -67,7 +67,7 @@ public class ServerRequestHandler implements Runnable {
                     }
 
                     if (!validReceiver) {
-                        outputStream.writeObject("emailFailed");
+                        outputStream.writeObject("mailFailed");
                         Platform.runLater(() -> {
                             serverModel.getLogList().add("Il destinatario della Mail non esiste.");
                         });
@@ -92,7 +92,8 @@ public class ServerRequestHandler implements Runnable {
                     outputStream.flush();
                 }
             } catch (IOException e) {
-                System.out.println("Server chiuso.");
+                e.printStackTrace();
+                quit();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
                 quit();

@@ -19,6 +19,7 @@ public class ClientFormController {
     private ClientModel model;
     private final FadeTransition fadeOut = new FadeTransition(Duration.millis(5000));
     private final FadeTransition sendEmailTransition = new FadeTransition(Duration.millis(1000));
+    private final FadeTransition failEmailTransition = new FadeTransition(Duration.millis(1000));
 
     @FXML
     private TextField receiverField;
@@ -57,6 +58,12 @@ public class ClientFormController {
         sendEmailTransition.setToValue(0.0);
         sendEmailTransition.setCycleCount(1);
         sendEmailTransition.setAutoReverse(false);
+
+        failEmailTransition.setNode(errorLabel);
+        failEmailTransition.setFromValue(1.0);
+        failEmailTransition.setToValue(0.0);
+        failEmailTransition.setCycleCount(1);
+        failEmailTransition.setAutoReverse(false);
     }
 
     @FXML
@@ -92,20 +99,17 @@ public class ClientFormController {
         if (flagValidEmail && emailSubject.length() > 0 && emailText.length() > 0) {
             errorLabel.setText("Sending email...");
             errorLabel.setTextFill(Color.DARKGREEN);
-            sendEmailTransition.playFromStart();
-            model.sendEmail(new Email(model.getClientUsername(), emailReceivers,
-                    emailSubject, emailText, model.getUniqueId()));
-            while (model.isWaitSendingResponse()) {
-                errorLabel.setText(errorLabel.getText().concat("."));
-            }
-            if (model.isMailSended()) {
+            errorLabel.setVisible(true);
+            if (model.sendEmail(new Email(model.getClientUsername(), emailReceivers,
+                    emailSubject, emailText, model.getUniqueId()))) {
                 errorLabel.setText("Email sended.");
                 sendEmailTransition.setOnFinished(actionEvent -> ((Stage)mainPane.getScene().getWindow()).close());
+                sendEmailTransition.playFromStart();
             } else {
                 errorLabel.setTextFill(Color.DARKRED);
                 errorLabel.setText("Failed to send.");
+                failEmailTransition.playFromStart();
             }
-            sendEmailTransition.playFromStart();
 
         } else {
             if (emailSubject.length() == 0) {
