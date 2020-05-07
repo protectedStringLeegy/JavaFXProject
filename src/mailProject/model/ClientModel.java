@@ -4,6 +4,8 @@ import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -189,6 +191,15 @@ class ThreadedEmailReceiver implements Runnable {
     private final ObjectInputStream inputStream;
     private final ObjectOutputStream outputStream;
     private boolean quit = false;
+    Alert alert = new Alert(Alert.AlertType.INFORMATION, "New Mail!", ButtonType.OK);
+
+    public void setAlert(Alert alert) {
+        alert.setTitle(model.getClientUsername());
+        alert.show();
+        if (alert.getResult() == ButtonType.OK) {
+            alert.close();
+        }
+    }
 
     public ThreadedEmailReceiver(ClientModel model) {
         this.model = model;
@@ -202,7 +213,6 @@ class ThreadedEmailReceiver implements Runnable {
 
     @Override
     public void run() {
-
         while (!quit) {
             try {
                 String aux = (String) inputStream.readObject();
@@ -221,6 +231,9 @@ class ThreadedEmailReceiver implements Runnable {
                     Email auxEmail = (Email) inputStream.readObject();
                     model.getEmailList().add(auxEmail);
                     outputStream.writeObject("emailReceived");
+                    Platform.runLater(() -> {
+                        setAlert(alert);
+                    });
                 } else if (aux.equalsIgnoreCase("mailSended")) {
                     System.out.println("Mail INVIATA!");
                     setServerResponse(true);

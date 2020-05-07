@@ -1,15 +1,17 @@
 package mailProject.client.Classes;
 
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import mailProject.model.ClientModel;
 import mailProject.model.Email;
+
+import java.util.Optional;
 
 public class ClientGUI extends Application {
 

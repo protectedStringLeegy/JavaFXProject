@@ -30,7 +30,9 @@ public class ServerGUI extends Application {
         BorderPane serverPane = listLoader.load();
 
         logView.setItems(serverModel.getLogList());
-        logView.setDisable(true);
+        logView.setOnMouseClicked(null);
+        logView.setFocusTraversable(false);
+
         userView.setItems(serverModel.getUserSessions());
         userView.setCellFactory(threadedRequestHandlerListView -> new UserCell());
 
