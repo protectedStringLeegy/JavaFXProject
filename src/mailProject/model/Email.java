@@ -6,46 +6,48 @@ import java.util.Calendar;
 
 public class Email implements Serializable {
 
-    private final long id;
+    private long id;
     private final String sender;
     private ArrayList<String> receivers = new ArrayList<>();
     private final String subject;
     private final String text;
     private final Calendar date;
 
-    public Email(String sender, String receiver, String subject, String text, long id) {
+    public Email(String sender, String receiver, String subject, String text) {
 
         this.sender = sender;
         this.receivers.add(receiver);
         this.subject = subject;
         this.text = text;
         this.date = Calendar.getInstance();
-        this.id = id;
+        this.id = 0;
     }
 
-    public Email(String sender, ArrayList<String> receivers, String subject, String text, long id) {
+    public Email(String sender, ArrayList<String> receivers, String subject, String text) {
 
         this.sender = sender;
         this.receivers = receivers;
         this.subject = subject;
         this.text = text;
         this.date = Calendar.getInstance();
-        this.id = id;
+        this.id = 0;
     }
 
-    public Email(String sender, String receiver, String subject, int id) {
+    public Email(String sender, String receiver, String subject) {
 
         this.sender = sender;
         this.receivers.add(receiver);
         this.subject = subject;
         this.text = "";
         this.date = Calendar.getInstance();
-        this.id = id;
+        this.id = 0;
     }
 
     public long getId() {
         return id;
     }
+    public void setId(long id) {
+        this.id = id; }
 
     public String getSender() {
         return sender;
@@ -67,7 +69,13 @@ public class Email implements Serializable {
         return date;
     }
 
-
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Email)) return false;
+        Email email = (Email) o;
+        return getId() == email.getId();
+    }
 
     @Override
     public String toString() {

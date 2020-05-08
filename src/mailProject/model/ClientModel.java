@@ -1,26 +1,15 @@
 package mailProject.model;
 
-import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 
 public class ClientModel {
 
@@ -30,26 +19,13 @@ public class ClientModel {
     private String nomeHost;
     private ObjectInputStream inputStream;
     private ObjectOutputStream outputStream;
-    private ThreadedEmailReceiver threadedEmailReceiver;
+    private ClientResponseHandler clientResponseHandler;
 
     // EMAIL List PROPERTY //
 
     private final ObservableList<Email> emailList = FXCollections.observableArrayList();
     public ObservableList<Email> getEmailList() {
         return emailList ;
-    }
-
-    // NEW EMAIL BOOL Property //
-
-    private final SimpleBooleanProperty isNewMailReceived = new SimpleBooleanProperty(false);
-    public SimpleBooleanProperty getNewMailReceivedBooleanProperty() {
-        return isNewMailReceived;
-    }
-    public final boolean getIsNewMailReceived() {
-        return getNewMailReceivedBooleanProperty().get();
-    }
-    public final void setIsNewMailReceived(boolean bool) {
-        getNewMailReceivedBooleanProperty().set(bool);
     }
 
     // Email SENDED Property //
@@ -100,9 +76,6 @@ public class ClientModel {
     public SimpleBooleanProperty emailSelectedBooleanProperty() {
         return isEmailSelected;
     }
-    public final boolean getIsEmailSelected() {
-        return emailSelectedBooleanProperty().get();
-    }
     public final void setIsEmailSelected(boolean bool) {
         emailSelectedBooleanProperty().set(bool);
     }
@@ -111,7 +84,6 @@ public class ClientModel {
 
     private final SimpleBooleanProperty isClientConnected = new SimpleBooleanProperty(false);
     public SimpleBooleanProperty isClientConnectedProperty(){return isClientConnected; }
-    public final boolean getIsClientConnected(){return isClientConnectedProperty().get();}
     public final void setIsClientConnected(boolean bool){isClientConnectedProperty().set(bool);}
 
     // USERNAME PROPERTY //
@@ -119,16 +91,6 @@ public class ClientModel {
     private final String clientUsername;
     public String getClientUsername() {
         return clientUsername;
-    }
-
-    // EMAIL UNIQUE ID //
-
-    private long uniqueId;
-    public long getUniqueId() {
-        return uniqueId++;
-    }
-    public void setUniqueId(long uniqueId) {
-        this.uniqueId = uniqueId;
     }
 
     // CONSTRUCTOR //
@@ -190,7 +152,7 @@ public class ClientModel {
     public void closeUserSession() {
         try {
             outputStream.writeObject("sessionClosed");
-            threadedEmailReceiver.quit();
+            clientResponseHandler.quit();
             userSocket.close();
 
         } catch (IOException e) {
@@ -200,11 +162,11 @@ public class ClientModel {
 
     private void attendEmail() {
         try {
-            threadedEmailReceiver = new ThreadedEmailReceiver(this);
+            clientResponseHandler = new ClientResponseHandler(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        new Thread(threadedEmailReceiver).start();
+        new Thread(clientResponseHandler).start();
     }
 }
 

@@ -101,7 +101,7 @@ public class ClientFormController {
             errorLabel.setTextFill(Color.DARKGREEN);
             errorLabel.setVisible(true);
             if (model.sendEmail(new Email(model.getClientUsername(), emailReceivers,
-                    emailSubject, emailText, model.getUniqueId()))) {
+                    emailSubject, emailText))) {
                 errorLabel.setText("Email sended.");
                 sendEmailTransition.setOnFinished(actionEvent -> ((Stage)mainPane.getScene().getWindow()).close());
                 sendEmailTransition.playFromStart();

@@ -59,9 +59,11 @@ public class ServerRequestHandler implements Runnable {
 
                     for (ServerRequestHandler trh : serverModel.getUserSessions()) {
                         if (auxMail.getReceiver().contains(trh.user)) {
+                            auxMail.setId(serverModel.getUniqueId());
                             trh.outputStream.writeObject("newMail");
                             trh.outputStream.writeObject(auxMail);
                             validReceiver = true;
+                            serverModel.getMailMap().get(trh.user).add(auxMail);
                             trh.outputStream.flush();
                         }
                     }

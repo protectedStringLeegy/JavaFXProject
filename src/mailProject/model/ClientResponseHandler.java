@@ -1,12 +1,9 @@
 package mailProject.model;
 
 import javafx.application.Platform;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
-import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import mailProject.client.Classes.ClientDialogController;
@@ -17,7 +14,7 @@ import java.io.ObjectOutputStream;
 import java.net.SocketException;
 import java.util.ArrayList;
 
-public class ThreadedEmailReceiver implements Runnable {
+public class ClientResponseHandler implements Runnable {
 
     private final ClientModel model;
     private final ObjectInputStream inputStream;
@@ -41,7 +38,7 @@ public class ThreadedEmailReceiver implements Runnable {
         stage.showAndWait();
     }
 
-    public ThreadedEmailReceiver(ClientModel model) throws IOException {
+    public ClientResponseHandler(ClientModel model) throws IOException {
         this.model = model;
         inputStream = model.getInputStream();
         outputStream = model.getOutputStream();
@@ -65,14 +62,10 @@ public class ThreadedEmailReceiver implements Runnable {
                         model.setIsClientConnected(true);
                     });
                 } else if (aux.equalsIgnoreCase("emptyMailList")) {
-                    Platform.runLater(() -> {
-                        model.setIsClientConnected(true);
-                    });
+                    Platform.runLater(() -> model.setIsClientConnected(true));
                 } else if (aux.equalsIgnoreCase("newMail")) {
                     Email auxEmail = (Email) inputStream.readObject();
-                    Platform.runLater(() -> {
-                        model.getEmailList().add(auxEmail);
-                    });
+                    Platform.runLater(() -> model.getEmailList().add(auxEmail));
                     outputStream.writeObject("emailReceived");
                     Platform.runLater(() -> showAlert(auxEmail));
                 } else if (aux.equalsIgnoreCase("mailSended")) {

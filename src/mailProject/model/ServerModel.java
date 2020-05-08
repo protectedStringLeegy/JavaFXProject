@@ -58,6 +58,13 @@ public class ServerModel {
         return mailMap;
     }
 
+    // Unique INDEX //
+
+    private long uniqueId;
+    public synchronized long getUniqueId() {
+        return uniqueId++;
+    }
+
     // CONSTRUCTOR //
 
     public ServerModel() {
@@ -73,6 +80,7 @@ public class ServerModel {
         try {
             ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILEPATH));
 
+            uniqueId = in.readLong();
             while (true) {
                 Email auxEmail = (Email)in.readObject();
 
@@ -96,6 +104,7 @@ public class ServerModel {
         try {
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILEPATH));
 
+            out.writeLong(uniqueId);
             for (ArrayList<Email> emails : mailMap.values()) {
                 for (Email mail : emails) {
                     out.writeObject(mail);
