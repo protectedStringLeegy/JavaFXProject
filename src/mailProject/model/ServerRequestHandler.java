@@ -91,10 +91,7 @@ public class ServerRequestHandler implements Runnable {
                     }
                     outputStream.flush();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-                quit();
-            } catch (ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
                 quit();
             }

@@ -4,8 +4,14 @@ import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -31,6 +37,19 @@ public class ClientModel {
     private final ObservableList<Email> emailList = FXCollections.observableArrayList();
     public ObservableList<Email> getEmailList() {
         return emailList ;
+    }
+
+    // NEW EMAIL BOOL Property //
+
+    private final SimpleBooleanProperty isNewMailReceived = new SimpleBooleanProperty(false);
+    public SimpleBooleanProperty getNewMailReceivedBooleanProperty() {
+        return isNewMailReceived;
+    }
+    public final boolean getIsNewMailReceived() {
+        return getNewMailReceivedBooleanProperty().get();
+    }
+    public final void setIsNewMailReceived(boolean bool) {
+        getNewMailReceivedBooleanProperty().set(bool);
     }
 
     // Email SENDED Property //
@@ -180,80 +199,13 @@ public class ClientModel {
     }
 
     private void attendEmail() {
-        threadedEmailReceiver = new ThreadedEmailReceiver(this);
+        try {
+            threadedEmailReceiver = new ThreadedEmailReceiver(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         new Thread(threadedEmailReceiver).start();
     }
 }
 
-class ThreadedEmailReceiver implements Runnable {
 
-    private final ClientModel model;
-    private final ObjectInputStream inputStream;
-    private final ObjectOutputStream outputStream;
-    private boolean quit = false;
-
-    Alert alert = new Alert(Alert.AlertType.NONE, "New Mail!", ButtonType.OK);
-
-    public void setAlert(Alert alert) {
-        alert.setTitle(model.getClientUsername());
-        alert.show();
-        if (alert.getResult() == ButtonType.OK) {
-            alert.close();
-        }
-    }
-
-    public ThreadedEmailReceiver(ClientModel model) {
-        this.model = model;
-        inputStream = model.getInputStream();
-        outputStream = model.getOutputStream();
-    }
-
-    public void quit() {
-        quit = true;
-    }
-
-    @Override
-    public void run() {
-        while (!quit) {
-            try {
-                String aux = (String) inputStream.readObject();
-                System.out.println(aux);
-                if (aux.equalsIgnoreCase("mailList")) {
-                    ArrayList<Email> emailArrayList = (ArrayList<Email>) inputStream.readObject();
-                    Platform.runLater(() -> {
-                        model.getEmailList().addAll(emailArrayList);
-                        model.setIsClientConnected(true);
-                    });
-                } else if (aux.equalsIgnoreCase("emptyMailList")) {
-                    Platform.runLater(() -> {
-                        model.setIsClientConnected(true);
-                    });
-                } else if (aux.equalsIgnoreCase("newMail")) {
-                    Email auxEmail = (Email) inputStream.readObject();
-                    model.getEmailList().add(auxEmail);
-                    outputStream.writeObject("emailReceived");
-                    Platform.runLater(() -> {
-                        setAlert(alert);
-                    });
-                } else if (aux.equalsIgnoreCase("mailSended")) {
-                    System.out.println("Mail INVIATA!");
-                    setServerResponse(true);
-                } else if (aux.equalsIgnoreCase("mailFailed")) {
-                    System.out.println("Mail FALLITA!");
-                    setServerResponse(false);
-                }
-
-            } catch (SocketException e) {
-                System.out.println("Client chiuso.");
-            } catch (ClassNotFoundException | IOException e) {
-                e.printStackTrace();
-                quit();
-            }
-        }
-    }
-
-    private void setServerResponse(boolean bool) {
-        model.setMailSended(bool);
-        model.setWaitSendingResponse(false);
-    }
-}

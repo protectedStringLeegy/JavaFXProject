@@ -37,9 +37,8 @@ public class ClientListCell extends ListCell<Email> {
     protected void updateItem(Email email, boolean empty) {
         super.updateItem(email, empty);
 
-        if(empty || email == null) {
+        if(empty) {
 
-            setText(null);
             setGraphic(null);
 
         } else {

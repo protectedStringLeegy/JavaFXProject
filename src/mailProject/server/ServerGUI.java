@@ -34,6 +34,8 @@ public class ServerGUI extends Application {
         logView.setFocusTraversable(false);
 
         userView.setItems(serverModel.getUserSessions());
+        userView.setOnMouseClicked(null);
+        logView.setFocusTraversable(false);
         userView.setCellFactory(threadedRequestHandlerListView -> new UserCell());
 
         serverStage.setTitle("SERVER");
