@@ -5,11 +5,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<DialogPane fx:controller="mailProject.client.Classes.ClientDialogController" headerText="New Mail" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+<DialogPane headerText="New Mail" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="160.0" prefWidth="270.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mailProject.client.Classes.ClientDialogController">
     <header>
       <AnchorPane minHeight="0.0" minWidth="0.0">
          <children>
-            <Label alignment="CENTER" layoutX="123.0" layoutY="22.0" text="New Mail!" underline="true" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Label alignment="CENTER" layoutX="123.0" layoutY="22.0" text="New Mail!" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <padding>
                   <Insets bottom="5.0" top="5.0" />
                </padding>
@@ -42,7 +42,7 @@
                   </Label>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="confirmButton" mnemonicParsing="false" prefWidth="50.0" text="Ok" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="20.0">
+                        <Button fx:id="confirmButton" alignment="CENTER" mnemonicParsing="false" prefWidth="50.0" text="Ok" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="90.0" AnchorPane.topAnchor="0.0">
                            <font>
                               <Font size="14.0" />
                            </font>
