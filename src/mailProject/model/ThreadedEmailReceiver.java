@@ -27,13 +27,16 @@ public class ThreadedEmailReceiver implements Runnable {
     FXMLLoader dialogLoader = new FXMLLoader(getClass().getClassLoader().getResource("mailProject/client/clientFXML/clientDialogView.fxml"));
     DialogPane dialogPane = dialogLoader.load();
     ClientDialogController dialogController = dialogLoader.getController();
+    Stage stage = new Stage();
 
+
+
+    private void initDialog() {
+        stage.setScene(new Scene(dialogPane));
+        stage.initModality(Modality.APPLICATION_MODAL);
+    }
 
     private void showAlert(Email email) {
-        Scene scene = new Scene(dialogPane);
-        Stage stage = new Stage();
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setScene(scene);
         dialogController.initDialog(email, stage);
         stage.showAndWait();
     }
@@ -42,6 +45,7 @@ public class ThreadedEmailReceiver implements Runnable {
         this.model = model;
         inputStream = model.getInputStream();
         outputStream = model.getOutputStream();
+        initDialog();
     }
 
     public void quit() {
