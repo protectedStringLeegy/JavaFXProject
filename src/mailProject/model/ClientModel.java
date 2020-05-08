@@ -104,7 +104,6 @@ public class ClientModel {
             e.printStackTrace();
         }
         connectToServerAndLoadData();
-        attendEmail();
     }
 
     public void  refreshClientConnection(){
@@ -121,11 +120,13 @@ public class ClientModel {
             outputStream = new ObjectOutputStream(userSocket.getOutputStream());
             inputStream = new ObjectInputStream(userSocket.getInputStream());
 
+            attendEmail();
+
             outputStream.writeObject(clientUsername);
             outputStream.flush();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Server Offline ...");
         }
     }
 
@@ -151,8 +152,11 @@ public class ClientModel {
 
     public void closeUserSession() {
         try {
+
             outputStream.writeObject("sessionClosed");
-            clientResponseHandler.quit();
+            if (isClientConnectedProperty().get()) {
+                clientResponseHandler.quit();
+            }
             userSocket.close();
 
         } catch (IOException e) {

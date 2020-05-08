@@ -118,6 +118,9 @@ public class ServerModel {
     public void stop() {
         runningServer = false;
         try {
+            for (ServerRequestHandler srh : getUserSessions()) {
+                srh.outputStream.writeObject("serverOffline");
+            }
             serverSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
