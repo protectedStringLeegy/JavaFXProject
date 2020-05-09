@@ -8,7 +8,7 @@ public class ClientMain3 extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        new ClientGUI("oguaglioneinnero@outlook.com").start(new Stage());
+        new ClientGUI("utente3@example.com").start(new Stage());
     }
 
     public static void main(String[] args) {

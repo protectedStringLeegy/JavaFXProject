@@ -153,11 +153,26 @@ public class ClientModel {
     public void closeUserSession() {
         try {
 
-            outputStream.writeObject("sessionClosed");
+            if (outputStream != null)
+                outputStream.writeObject("sessionClosed");
+
             if (isClientConnectedProperty().get()) {
                 clientResponseHandler.quit();
             }
-            userSocket.close();
+
+            if (userSocket != null)
+                userSocket.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeMailFromServer(Email email) {
+        try {
+
+            outputStream.writeObject("deleteMail");
+            outputStream.writeObject(email);
 
         } catch (IOException e) {
             e.printStackTrace();

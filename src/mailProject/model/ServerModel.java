@@ -1,6 +1,5 @@
 package mailProject.model;
 
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -68,8 +67,8 @@ public class ServerModel {
     // CONSTRUCTOR //
 
     public ServerModel() {
-        logList.add("Server started ...");
-        logList.add("Loading email ...");
+        logList.add("Server acceso.");
+        logList.add("Caricamento mail ...");
         loadMailFromFile();
         startServer();
     }
@@ -80,20 +79,29 @@ public class ServerModel {
         try {
             ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILEPATH));
 
-            uniqueId = in.readLong();
+            try {
+                uniqueId = in.readLong();
+            } catch (EOFException eof) {
+                System.out.println("Unique index non trovato.\nLo inizializzo...");
+                uniqueId = 0;
+            }
+
+            System.out.println("Valore dell'Indice: " + uniqueId);
+
             while (true) {
                 Email auxEmail = (Email)in.readObject();
 
                 for (String s : auxEmail.getReceiver()) {
                     if (!mailMap.containsKey(s))
                         mailMap.put(s, new ArrayList<>());
-                    mailMap.get(s).add(auxEmail);
+                    if (!mailMap.get(s).contains(auxEmail))
+                        mailMap.get(s).add(auxEmail);
                 }
             }
         } catch (ClassNotFoundException | FileNotFoundException e) {
             System.out.println(e.getMessage());
         } catch (EOFException eofException) {
-            logList.add("Email loaded.");
+            logList.add("Mail caricate.");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -120,6 +128,7 @@ public class ServerModel {
         try {
             for (ServerRequestHandler srh : getUserSessions()) {
                 srh.outputStream.writeObject("serverOffline");
+                srh.quit();
             }
             serverSocket.close();
         } catch (IOException e) {

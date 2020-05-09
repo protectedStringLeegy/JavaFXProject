@@ -7,11 +7,11 @@
 <?import javafx.scene.layout.Pane?>
 <ToolBar prefHeight="39.0" prefWidth="433.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mailProject.client.Classes.ClientToolbarController">
   <items>
-    <Button fx:id="replyButton" mnemonicParsing="false" onAction="#replyTo" text="Reply" />
-      <Button fx:id="replyAllButton" mnemonicParsing="false" onAction="#replyAll" text="Reply All" />
-      <Button fx:id="forwardButton" mnemonicParsing="false" onAction="#forwardTo" text="Forward" />
-      <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteMail" text="Delete" />
-      <Button mnemonicParsing="false" onAction="#newMail" text="New mail" />
+    <Button fx:id="replyButton" mnemonicParsing="false" onAction="#replyTo" text="Rispondi" />
+      <Button fx:id="replyAllButton" mnemonicParsing="false" onAction="#replyAll" text="Rispondi a tutti" />
+      <Button fx:id="forwardButton" mnemonicParsing="false" onAction="#forwardTo" text="Inoltra" />
+      <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteMail" text="Elimina" />
+      <Button fx:id="newMailButton" mnemonicParsing="false" onAction="#newMail" text="Nuova Mail" />
       <Pane HBox.hgrow="ALWAYS" />
       <Button fx:id="connection" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" scaleX="0.5" scaleY="0.5" />
       <Button fx:id="refreshButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="357.0" layoutY="10.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" onAction="#refreshPressed">

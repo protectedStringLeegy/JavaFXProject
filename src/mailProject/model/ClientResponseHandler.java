@@ -62,7 +62,11 @@ public class ClientResponseHandler implements Runnable {
                         model.setIsClientConnected(true);
                     });
                 } else if (aux.equalsIgnoreCase("serverOffline")) {
-                    Platform.runLater(() -> model.setIsClientConnected(false));
+                    Platform.runLater(() -> {
+                        model.setIsClientConnected(false);
+                        model.getEmailList().clear();
+                        model.emailSelectedBooleanProperty().set(false);
+                    });
                     quit();
                 } else if (aux.equalsIgnoreCase("emptyMailList")) {
                     Platform.runLater(() -> model.setIsClientConnected(true));

@@ -4,6 +4,7 @@ import javafx.application.Platform;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 
 public class ServerRequestHandler implements Runnable {
@@ -32,6 +33,11 @@ public class ServerRequestHandler implements Runnable {
 
     public void quit() {
         quit = true;
+        try {
+            incoming.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -43,6 +49,14 @@ public class ServerRequestHandler implements Runnable {
                 if (aux.equalsIgnoreCase("emailReceived")) {
                     Platform.runLater(() -> {
                         serverModel.getLogList().add(user + " ha ricevuto una Mail.");
+                    });
+                } else if (aux.equalsIgnoreCase("deleteMail")) {
+                    Email auxMail = (Email) inputStream.readObject();
+                    if (auxMail.getReceiver().size() > 1) {
+                        auxMail.getReceiver().remove(user);
+                    } else serverModel.getMailMap().get(user).remove(auxMail);
+                    Platform.runLater(() -> {
+                        serverModel.getLogList().add(user + " ha eliminato una Mail.");
                     });
                 } else if (aux.equalsIgnoreCase("sessionClosed")) {
                     quit();
@@ -93,6 +107,8 @@ public class ServerRequestHandler implements Runnable {
                     }
                     outputStream.flush();
                 }
+            } catch (SocketException se) {
+                System.out.println(user + " client thread chiuso.");
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
                 quit();

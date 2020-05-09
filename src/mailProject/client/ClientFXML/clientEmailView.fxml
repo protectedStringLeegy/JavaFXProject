@@ -19,7 +19,7 @@
    <children>
       <AnchorPane style="-fx-background-color: gainsboro;" GridPane.columnSpan="3">
          <children>
-            <Label text="Sender:">
+            <Label text="Mittente:">
                <font>
                   <Font size="14.0" />
                </font>
@@ -33,7 +33,7 @@
       </AnchorPane>
       <AnchorPane style="-fx-background-color: azure;" GridPane.columnSpan="3" GridPane.rowIndex="1">
          <children>
-            <Label text="Subject:">
+            <Label text="Oggetto:">
                <font>
                   <Font size="14.0" />
                </font>

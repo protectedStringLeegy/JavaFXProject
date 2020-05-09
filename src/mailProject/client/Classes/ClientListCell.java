@@ -30,7 +30,7 @@ public class ClientListCell extends ListCell<Email> {
 
     private FXMLLoader fxmlLoader;
     private final SimpleDateFormat hoursFormat = new SimpleDateFormat("HH:mm");
-    private final SimpleDateFormat dayFormat = new SimpleDateFormat("dd:M");
+    private final SimpleDateFormat dayFormat = new SimpleDateFormat("d MMMM");
 
 
     @Override

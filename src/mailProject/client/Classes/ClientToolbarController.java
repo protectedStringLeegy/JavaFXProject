@@ -2,6 +2,8 @@ package mailProject.client.Classes;
 
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -37,6 +39,9 @@ public class ClientToolbarController {
     @FXML
     private Button refreshButton;
 
+    @FXML
+    private Button newMailButton;
+
     private ClientModel model;
     private GridPane formPane;
     private Stage formWindow;
@@ -69,6 +74,18 @@ public class ClientToolbarController {
                 replyAllButton.setDisable(false);
                 deleteButton.setDisable(false);
                 forwardButton.setDisable(false);
+            }
+        });
+
+        model.isClientConnectedProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (!newValue) {
+                replyButton.setDisable(true);
+                replyAllButton.setDisable(true);
+                deleteButton.setDisable(true);
+                forwardButton.setDisable(true);
+                newMailButton.setDisable(true);
+            } else {
+                newMailButton.setDisable(false);
             }
         });
 
@@ -156,6 +173,7 @@ public class ClientToolbarController {
     @FXML
     public void deleteMail() {
         model.getEmailList().remove(model.getCurrentEmail());
+        model.removeMailFromServer(model.getCurrentEmail());
         model.setCurrentEmail(null);
         model.setIsEmailSelected(false);
     }
