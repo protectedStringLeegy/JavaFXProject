@@ -27,13 +27,13 @@ public class ServerModel {
     // LOG List PROPERTY //
 
     private final ObservableList<String> logList = FXCollections.observableArrayList();
-    public ObservableList<String> getLogList() {
+    public synchronized ObservableList<String> getLogList() {
         return logList;
     }
 
     // USER Session PROPERTY //
     private final ObservableList<ServerRequestHandler> userSessions = FXCollections.observableArrayList();
-    public ObservableList<ServerRequestHandler> getUserSessions() {
+    public synchronized ObservableList<ServerRequestHandler> getUserSessions() {
         return userSessions;
     }
 
@@ -53,7 +53,7 @@ public class ServerModel {
     // Mail HASH MAP //
 
     private final HashMap<String, ArrayList<Email>> mailMap = new HashMap<>();
-    public HashMap<String, ArrayList<Email>> getMailMap() {
+    public synchronized HashMap<String, ArrayList<Email>> getMailMap() {
         return mailMap;
     }
 
